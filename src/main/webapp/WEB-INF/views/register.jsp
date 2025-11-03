@@ -18,11 +18,11 @@
     if (ok != null)  { %><p style="color:green;"><%= ok %></p><% } %>
 
 <form method="post" action="${pageContext.request.contextPath}/register">
-    <label>First name: <input name="firstName" required></label><br>
-    <label>Last name:  <input name="lastName"  required></label><br>
+    <label>First Name: <input name="firstName" required></label><br>
+    <label>Last Name:  <input name="lastName"  required></label><br>
     <label>Email:      <input name="email" type="email" required></label><br>
     <label>Password:   <input name="password" type="password" required></label><br>
-    <label>Confirm:    <input name="confirm"  type="password" required></label><br>
+    <label>Confirm Password:    <input name="confirm"  type="password" required></label><br>
     <label>Role:
         <select name="role" required>
             <option value="CLIENT">Client</option>

@@ -7,9 +7,9 @@
 </head>
 <body>
 
-<h2>Welcome to Logistic Company</h2>
+<h2>Welcome to ALVAS Logistics</h2>
 
-<p>This is the main page of your web application.</p>
+<p>This is our main page.</p>
 
 <p>
     <a href="${pageContext.request.contextPath}/register">Register</a> |
@@ -21,8 +21,10 @@
     Object email = session.getAttribute("email");
     Object role  = session.getAttribute("role");
     if (email != null) {
+        String r = (role != null) ? role.toString() : "UNKNOWN";
+        String roleStr = r.charAt(0) + r.substring(1).toLowerCase();
 %>
-<p>You are signed in as <b><%= email %></b> (role: <%= role %>)</p>
+<p>You are signed in as <b><%= email %></b> (role: <%= roleStr %>)</p>
 <%
 } else {
 %>
