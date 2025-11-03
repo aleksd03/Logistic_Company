@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'war' // проектът ще бъде уеб приложение, което се деплойва като WAR файл (Tomcat)
+    id 'war'
 }
 
 group = 'org.informatics'
