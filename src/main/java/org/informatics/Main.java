@@ -1,8 +1,10 @@
 package org.informatics;
 
+import org.informatics.service.AuthService;
+
 public class Main {
     public static void main(String[] args) {
-        var auth = new org.informatics.logistic.service.AuthService();
+        var auth = new AuthService();
 
         auth.login("ivan123@asd.com", "ivan123456")
                 .ifPresentOrElse(
@@ -33,7 +35,7 @@ public class Main {
 
 
 
-//        UserRepository repository = new UserRepository();
+//        UserDao repository = new UserDao();
 //
 //        String email = "peter123@asd.com";
 //        String rawPassword = "peter123456";
