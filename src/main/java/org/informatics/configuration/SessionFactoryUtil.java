@@ -5,6 +5,11 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.informatics.entity.User;
+import org.informatics.entity.Client;
+import org.informatics.entity.Employee;
+import org.informatics.entity.Company;
+import org.informatics.entity.Office;
+import org.informatics.entity.Shipment;
 
 public class SessionFactoryUtil {
     private static SessionFactory sessionFactory;
