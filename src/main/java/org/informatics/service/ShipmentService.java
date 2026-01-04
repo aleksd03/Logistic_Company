@@ -4,9 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.informatics.configuration.SessionFactoryUtil;
 import org.informatics.dao.ShipmentDao;
+import org.informatics.entity.Client;
+import org.informatics.entity.Employee;
 import org.informatics.entity.Shipment;
 import org.informatics.entity.ShipmentStatus;
-import org.informatics.logistic.entity.*;
+import org.informatics.entity.*;
 
 public class ShipmentService {
 
@@ -31,7 +33,7 @@ public class ShipmentService {
     public void markReceived(Long shipmentId) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
-            Shipment s = session.get(Shipment.class, shipmentId);
+            Shipment s = session.find(Shipment.class, shipmentId);
             s.setStatus(ShipmentStatus.RECEIVED);
             tx.commit();
         }

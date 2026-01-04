@@ -3,9 +3,11 @@ package org.informatics.service;
 import org.informatics.dao.ClientDao;
 import org.informatics.dao.EmployeeDao;
 import org.informatics.dao.ShipmentDao;
+import org.informatics.entity.Client;
+import org.informatics.entity.Employee;
 import org.informatics.entity.Shipment;
-import org.informatics.logistic.dao.*;
-import org.informatics.logistic.entity.*;
+import org.informatics.dao.*;
+import org.informatics.entity.*;
 
 import java.util.List;
 

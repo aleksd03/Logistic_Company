@@ -1,14 +1,22 @@
 package org.informatics.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "shipments")
 public class Shipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     // Client who sends the shipment
     @ManyToOne(optional = false)
@@ -28,50 +36,4 @@ public class Shipment {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ShipmentStatus status;
-
-    /* ---------- Getters & Setters ---------- */
-
-    public Long getId() {
-        return id;
-    }
-
-    public Client getSender() {
-        return sender;
-    }
-
-    public void setSender(Client sender) {
-        this.sender = sender;
-    }
-
-    public Client getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(Client receiver) {
-        this.receiver = receiver;
-    }
-
-    public Employee getRegisteredBy() {
-        return registeredBy;
-    }
-
-    public void setRegisteredBy(Employee registeredBy) {
-        this.registeredBy = registeredBy;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public ShipmentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ShipmentStatus status) {
-        this.status = status;
-    }
 }

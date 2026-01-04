@@ -1,7 +1,15 @@
 package org.informatics.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "employees")
 public class Employee extends BaseEntity {
@@ -11,11 +19,10 @@ public class Employee extends BaseEntity {
     private User user;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "office_id", nullable = false)
     private Office office;
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public Office getOffice() { return office; }
-    public void setOffice(Office office) { this.office = office; }
 }

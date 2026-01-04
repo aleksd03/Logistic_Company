@@ -35,7 +35,7 @@ public class ClientDao {
 
     public Client findById(Long id) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            return session.get(Client.class, id);
+            return session.find(Client.class, id);
         }
     }
 

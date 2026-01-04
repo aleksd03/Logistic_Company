@@ -35,7 +35,7 @@ public class EmployeeDao {
 
     public Employee findById(Long id) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            return session.get(Employee.class, id);
+            return session.find(Employee.class, id);
         }
     }
 

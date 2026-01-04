@@ -27,7 +27,7 @@ public class UserDao {
 
     public Optional<User> findById(long id) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            return Optional.ofNullable(session.get(User.class, id));
+            return Optional.ofNullable(session.find(User.class, id));
         }
     }
 }

@@ -3,15 +3,15 @@ package org.informatics.service;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.informatics.configuration.SessionFactoryUtil;
-import org.informatics.logistic.entity.LogisticCompany;
+import org.informatics.entity.Company;
 
 public class CompanyService {
 
-    public LogisticCompany getDefaultCompany() {
+    public Company getDefaultCompany() {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
 
-            LogisticCompany company = session
-                    .createQuery("from LogisticCompany", LogisticCompany.class)
+            Company company = session
+                    .createQuery("from Company", Company.class)
                     .setMaxResults(1)
                     .uniqueResult();
 
@@ -20,7 +20,7 @@ public class CompanyService {
             }
 
             Transaction tx = session.beginTransaction();
-            LogisticCompany c = new LogisticCompany();
+            Company c = new Company();
             c.setName("ALVAS Logistics");
             session.persist(c);
             tx.commit();

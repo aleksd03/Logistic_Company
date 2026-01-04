@@ -35,7 +35,7 @@ public class OfficeDao {
 
     public Office findById(Long id) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            return session.get(Office.class, id);
+            return session.find(Office.class, id);
         }
     }
 
