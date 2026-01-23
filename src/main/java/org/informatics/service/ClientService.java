@@ -6,7 +6,6 @@ import org.informatics.entity.Client;
 import org.informatics.entity.User;
 
 public class ClientService {
-
     private final ClientDao repo = new ClientDao();
 
     public void createForUser(User user, Company company) {

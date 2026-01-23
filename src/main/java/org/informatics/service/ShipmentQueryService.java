@@ -21,8 +21,8 @@ public class ShipmentQueryService {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             Query<Shipment> q = session.createQuery(
                     "from Shipment s " +
-                            "where lower(s.sender.email) = :e " +
-                            "   or lower(s.receiver.email) = :e",
+                            "where lower(s.sender.user.email) = :e " +
+                            "   or lower(s.receiver.user.email) = :e",
                     Shipment.class
             );
             q.setParameter("e", email.toLowerCase());
@@ -31,8 +31,10 @@ public class ShipmentQueryService {
     }
 
     private ShipmentDto toDto(Shipment s) {
-        String sender = s.getSender() == null ? "" : s.getSender().getEmail();
-        String receiver = s.getReceiver() == null ? "" : s.getReceiver().getEmail();
+        String sender = s.getSender() == null ? "" :
+                (s.getSender().getUser() == null ? "" : s.getSender().getUser().getEmail());
+        String receiver = s.getReceiver() == null ? "" :
+                (s.getReceiver().getUser() == null ? "" : s.getReceiver().getUser().getEmail());
         String status = s.getStatus() == null ? "" : s.getStatus().name();
 
         return new ShipmentDto(

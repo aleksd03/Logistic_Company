@@ -22,7 +22,7 @@ public class Employee extends BaseEntity {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "office_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "office_id", nullable = true)
     private Office office;
 }
