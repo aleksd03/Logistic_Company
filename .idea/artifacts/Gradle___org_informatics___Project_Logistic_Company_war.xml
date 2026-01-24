@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="war" external-system-id="GRADLE" name="Gradle : org.informatics : Logistic_Company-1.0-SNAPSHOT.war">
+  <artifact type="war" external-system-id="GRADLE" name="Gradle : org.informatics : Project_Logistic_Company.war">
     <output-path>$PROJECT_DIR$/build/libs</output-path>
     <properties id="gradle-properties">
       <options external-project-path="$PROJECT_DIR$">
@@ -7,8 +7,8 @@
         <cleanTaskPath>:cleanWar</cleanTaskPath>
       </options>
     </properties>
-    <root id="archive" name="Logistic_Company-1.0-SNAPSHOT.war">
-      <element id="artifact" artifact-name="Gradle : org.informatics : Logistic_Company-1.0-SNAPSHOT.war (exploded)" />
+    <root id="archive" name="Project_Logistic_Company.war">
+      <element id="artifact" artifact-name="Gradle : org.informatics : Project_Logistic_Company.war (exploded)" />
     </root>
   </artifact>
 </component>

@@ -4,10 +4,32 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
 
-    <display-name>Logistic Company</display-name>
+    <display-name>ALVAS Logistics</display-name>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
+    <!-- Error Pages Configuration -->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/errors/403.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/errors/404.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/errors/500.jsp</location>
+    </error-page>
+
+    <!-- Generic exception handler -->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/errors/500.jsp</location>
+    </error-page>
 
 </web-app>
