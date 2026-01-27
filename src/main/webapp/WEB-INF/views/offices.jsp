@@ -70,20 +70,34 @@
                     </thead>
                     <tbody>
                     <% if (offices != null && !offices.isEmpty()) { %>
-                    <% for (Office office : offices) { %>
+                    <% for (Office o : offices) { %>
                     <tr>
-                        <td><%= office.getId() %></td>
-                        <td><%= office.getAddress() %></td>
-                        <td><%= office.getCompany() != null ? office.getCompany().getName() : "Без компания" %></td>
+                        <td><%= o.getId() %></td>
+                        <td><%= o.getAddress() %></td>
+                        <td><%= o.getCompany() != null ? o.getCompany().getName() : "N/A" %></td>
                         <td>
-                            <button onclick="openEditModal(<%= office.getId() %>, '<%= office.getAddress() %>', <%= office.getCompany() != null ? office.getCompany().getId() : "null" %>)" class="btn-small btn-primary">✏️ Редактирай</button>
-                            <button onclick="confirmDelete(<%= office.getId() %>, '<%= office.getAddress() %>')" class="btn-small btn-danger">🗑️ Изтрий</button>
+                            <div class="action-buttons">
+                                <button onclick="openEditModal(<%= o.getId() %>, '<%= o.getAddress().replace("'", "\\'") %>', <%= o.getCompany() != null ? o.getCompany().getId() : "null" %>)"
+                                        class="btn btn-primary">
+                                    🖊️ Редактирай
+                                </button>
+
+                                <form action="${pageContext.request.contextPath}/offices"
+                                      method="get"
+                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете офиса на адрес: <%= o.getAddress().replace("'", "\\'") %>?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<%= o.getId() %>">
+                                    <button type="submit" class="btn btn-danger">
+                                        🗑️ Изтрий
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     <% } %>
                     <% } else { %>
                     <tr>
-                        <td colspan="4" class="text-center">Няма регистрирани офиси</td>
+                        <td colspan="4" class="text-center">Няма добавени офиси.</td>
                     </tr>
                     <% } %>
                     </tbody>
@@ -99,7 +113,6 @@
     </footer>
 </div>
 
-<!-- Create/Edit Modal -->
 <div id="officeModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -155,7 +168,6 @@
         }
     }
 
-    // Close modal when clicking outside
     window.onclick = function(event) {
         const modal = document.getElementById('officeModal');
         if (event.target == modal) {

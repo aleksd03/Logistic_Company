@@ -6,6 +6,7 @@ import jakarta.servlet.http.*;
 import org.informatics.entity.Client;
 import org.informatics.entity.Employee;
 import org.informatics.entity.Office;
+import org.informatics.entity.Shipment;
 import org.informatics.entity.enums.Role;
 import org.informatics.service.ClientService;
 import org.informatics.service.EmployeeService;
@@ -35,8 +36,13 @@ public class ShipmentRegisterServlet extends HttpServlet {
         }
 
         try {
+            System.out.println("📋 ShipmentRegisterServlet - Loading registration form");
+
+            // Зареди клиенти и офиси
             List<Client> clients = clientService.getAllClients();
             List<Office> offices = officeService.getAllOffices();
+
+            System.out.println("✅ Loaded " + clients.size() + " clients and " + offices.size() + " offices");
 
             request.setAttribute("clients", clients);
             request.setAttribute("offices", offices);
@@ -44,8 +50,8 @@ public class ShipmentRegisterServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/shipment-register.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Грешка при зареждане на формата: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+            System.err.println("❌ ERROR in ShipmentRegisterServlet doGet: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/employee-dashboard?error=Грешка+при+зареждане");
         }
     }
 
@@ -53,45 +59,80 @@ public class ShipmentRegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        System.out.println("\n========================================");
+        System.out.println("📦 SHIPMENT REGISTRATION - START");
+        System.out.println("========================================");
+
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("userRole") != Role.EMPLOYEE) {
+            System.err.println("❌ Session or role check failed");
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
         try {
+            System.out.println("1️⃣ Getting parameters...");
             Long userId = (Long) session.getAttribute("userId");
-            Long senderId = Long.parseLong(request.getParameter("senderId"));
-            Long receiverId = Long.parseLong(request.getParameter("receiverId"));
-            double weight = Double.parseDouble(request.getParameter("weight"));
-
+            String senderIdStr = request.getParameter("senderId");
+            String receiverIdStr = request.getParameter("receiverId");
+            String weightStr = request.getParameter("weight");
             String deliveryType = request.getParameter("deliveryType");
+
+            System.out.println("   - userId: " + userId);
+            System.out.println("   - senderId: " + senderIdStr);
+            System.out.println("   - receiverId: " + receiverIdStr);
+            System.out.println("   - weight: " + weightStr);
+            System.out.println("   - deliveryType: " + deliveryType);
+
+            // Validation
+            if (senderIdStr == null || receiverIdStr == null || weightStr == null || deliveryType == null) {
+                throw new IllegalArgumentException("Missing required parameters");
+            }
+
+            System.out.println("2️⃣ Parsing parameters...");
+            Long senderId = Long.parseLong(senderIdStr);
+            Long receiverId = Long.parseLong(receiverIdStr);
+            double weight = Double.parseDouble(weightStr);
+
+            System.out.println("3️⃣ Processing delivery type...");
             boolean deliveryToOffice = "office".equals(deliveryType);
 
             Office deliveryOffice = null;
             String deliveryAddress = null;
 
             if (deliveryToOffice) {
-                Long officeId = Long.parseLong(request.getParameter("officeId"));
-                deliveryOffice = officeService.getOfficeById(officeId);
+                String officeIdStr = request.getParameter("officeId");
+                System.out.println("   - Office delivery, officeId: " + officeIdStr);
+                if (officeIdStr != null && !officeIdStr.isEmpty()) {
+                    Long officeId = Long.parseLong(officeIdStr);
+                    deliveryOffice = officeService.getOfficeById(officeId);
+                    System.out.println("   - Office found: " + (deliveryOffice != null));
+                }
             } else {
                 deliveryAddress = request.getParameter("deliveryAddress");
+                System.out.println("   - Address delivery: " + deliveryAddress);
             }
 
+            System.out.println("4️⃣ Finding employee...");
             Employee employee = employeeService.getEmployeeByUserId(userId);
             if (employee == null) {
                 throw new RuntimeException("Employee not found for user ID: " + userId);
             }
+            System.out.println("   - Employee found: " + employee.getId());
 
+            System.out.println("5️⃣ Finding clients...");
             Client sender = clientService.getClientById(senderId);
             Client receiver = clientService.getClientById(receiverId);
 
             if (sender == null || receiver == null) {
-                throw new RuntimeException("Подателят или получателят не са намерени");
+                throw new RuntimeException("Sender or receiver not found");
             }
+            System.out.println("   - Sender found: " + sender.getId());
+            System.out.println("   - Receiver found: " + receiver.getId());
 
-            shipmentService.registerShipment(
+            System.out.println("6️⃣ Registering shipment...");
+            Shipment shipment = shipmentService.registerShipment(
                     sender,
                     receiver,
                     employee,
@@ -101,28 +142,42 @@ public class ShipmentRegisterServlet extends HttpServlet {
                     deliveryAddress
             );
 
-            response.sendRedirect(request.getContextPath() + "/employee-shipments?success=Пратката е регистрирана успешно!");
+            System.out.println("✅ Shipment registered successfully!");
+            System.out.println("   - Shipment ID: " + shipment.getId());
+            System.out.println("   - Price: " + shipment.getPrice() + "€");
+
+            System.out.println("7️⃣ Redirecting...");
+
+            String successMessage = java.net.URLEncoder.encode("Пратката е регистрирана успешно!", "UTF-8");
+            String redirectUrl = request.getContextPath() + "/employee-shipments?success=" + successMessage;
+
+            System.out.println("   - Redirect URL: " + redirectUrl);
+
+            response.sendRedirect(redirectUrl);
+
+            System.out.println("✅ Redirect sent successfully!");
+            System.out.println("========================================\n");
 
         } catch (NumberFormatException e) {
+            System.err.println("❌ NumberFormatException: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Невалидни данни: " + e.getMessage());
-
-            List<Client> clients = clientService.getAllClients();
-            List<Office> offices = officeService.getAllOffices();
-            request.setAttribute("clients", clients);
-            request.setAttribute("offices", offices);
-
-            request.getRequestDispatcher("/WEB-INF/views/shipment-register.jsp").forward(request, response);
+            try {
+                String errorMsg = java.net.URLEncoder.encode("Невалидни данни", "UTF-8");
+                response.sendRedirect(request.getContextPath() + "/shipment-register?error=" + errorMsg);
+            } catch (Exception ex) {
+                System.err.println("❌ Failed to send error redirect: " + ex.getMessage());
+            }
         } catch (Exception e) {
+            System.err.println("❌ Exception during shipment registration: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Грешка при регистриране на пратка: " + e.getMessage());
-
-            List<Client> clients = clientService.getAllClients();
-            List<Office> offices = officeService.getAllOffices();
-            request.setAttribute("clients", clients);
-            request.setAttribute("offices", offices);
-
-            request.getRequestDispatcher("/WEB-INF/views/shipment-register.jsp").forward(request, response);
+            try {
+                String errorMsg = e.getMessage() != null ?
+                        java.net.URLEncoder.encode(e.getMessage(), "UTF-8") :
+                        "Unknown+error";
+                response.sendRedirect(request.getContextPath() + "/shipment-register?error=" + errorMsg);
+            } catch (Exception ex) {
+                System.err.println("❌ Failed to send error redirect: " + ex.getMessage());
+            }
         }
     }
 }

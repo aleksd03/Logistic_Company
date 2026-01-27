@@ -28,24 +28,39 @@ public class CompaniesServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        try {
-            if ("edit".equals(action)) {
-                Long id = Long.parseLong(request.getParameter("id"));
-                Company company = companyService.getCompanyById(id);
-                request.setAttribute("company", company);
-                request.getRequestDispatcher("/WEB-INF/views/company-edit.jsp").forward(request, response);
-            } else if ("delete".equals(action)) {
+        if ("delete".equals(action)) {
+            try {
                 Long id = Long.parseLong(request.getParameter("id"));
                 companyService.deleteCompany(id);
-                response.sendRedirect(request.getContextPath() + "/companies?success=Компанията е изтрита успешно!");
-            } else {
-                List<Company> companies = companyService.getAllCompanies();
-                request.setAttribute("companies", companies);
-                request.getRequestDispatcher("/WEB-INF/views/companies.jsp").forward(request, response);
+
+                String successMsg = java.net.URLEncoder.encode("Компанията е изтрита успешно!", "UTF-8");
+                response.sendRedirect(request.getContextPath() + "/companies?success=" + successMsg);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                String errorMsg = java.net.URLEncoder.encode("Грешка при изтриване: " + e.getMessage(), "UTF-8");
+                response.sendRedirect(request.getContextPath() + "/companies?error=" + errorMsg);
+                return;
             }
+        }
+
+        if ("edit".equals(action)) {
+            try {
+                Long id = Long.parseLong(request.getParameter("id"));
+                Company company = companyService.getCompanyById(id);
+                request.setAttribute("editCompany", company);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            List<Company> companies = companyService.getAllCompanies();
+            request.setAttribute("companies", companies);
+            request.getRequestDispatcher("/WEB-INF/views/companies.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Грешка: " + e.getMessage());
+            request.setAttribute("error", "Грешка при зареждане на компании: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
@@ -68,18 +83,20 @@ public class CompaniesServlet extends HttpServlet {
             if (idParam != null && !idParam.isEmpty()) {
                 Long id = Long.parseLong(idParam);
                 Company company = companyService.getCompanyById(id);
-                company.setName(name);
-                companyService.updateCompany(company);
-                response.sendRedirect(request.getContextPath() + "/companies?success=Компанията е актуализирана успешно!");
+                if (company != null) {
+                    company.setName(name);
+                    companyService.updateCompany(company);
+                }
             } else {
-                // Create
                 companyService.createCompany(name);
-                response.sendRedirect(request.getContextPath() + "/companies?success=Компанията е създадена успешно!");
             }
+
+            response.sendRedirect(request.getContextPath() + "/companies");
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Грешка: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/companies.jsp").forward(request, response);
+            String errorMsg = java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
+            response.sendRedirect(request.getContextPath() + "/companies?error=" + errorMsg);
         }
     }
 }

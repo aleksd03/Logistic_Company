@@ -17,16 +17,37 @@ import java.time.LocalDateTime;
 @Table(name = "shipments")
 public class Shipment extends BaseEntity {
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "sender_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(
+            name = "sender_id",
+            nullable = true,
+            foreignKey = @ForeignKey(
+                    name = "fk_shipment_sender",
+                    foreignKeyDefinition = "FOREIGN KEY (sender_id) REFERENCES clients(id) ON DELETE SET NULL"
+            )
+    )
     private Client sender;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "receiver_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(
+            name = "receiver_id",
+            nullable = true,
+            foreignKey = @ForeignKey(
+                    name = "fk_shipment_receiver",
+                    foreignKeyDefinition = "FOREIGN KEY (receiver_id) REFERENCES clients(id) ON DELETE SET NULL"
+            )
+    )
     private Client receiver;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "registered_by_employee_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(
+            name = "registered_by_employee_id",
+            nullable = true,
+            foreignKey = @ForeignKey(
+                    name = "fk_shipment_registered_by",
+                    foreignKeyDefinition = "FOREIGN KEY (registered_by_employee_id) REFERENCES employees(id) ON DELETE SET NULL"
+            )
+    )
     private Employee registeredBy;
 
     @Column(nullable = false)
@@ -39,7 +60,14 @@ public class Shipment extends BaseEntity {
     private Boolean deliveryToOffice;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "delivery_office_id", nullable = true)
+    @JoinColumn(
+            name = "delivery_office_id",
+            nullable = true,
+            foreignKey = @ForeignKey(
+                    name = "fk_shipment_delivery_office",
+                    foreignKeyDefinition = "FOREIGN KEY (delivery_office_id) REFERENCES offices(id) ON DELETE SET NULL"
+            )
+    )
     private Office deliveryOffice;
 
     @Column(name = "delivery_address", length = 500, nullable = true)

@@ -9,6 +9,7 @@
     Role userRole = (Role) session.getAttribute("userRole");
 
     List<Company> companies = (List<Company>) request.getAttribute("companies");
+    Company editCompany = (Company) request.getAttribute("editCompany");
     String success = request.getParameter("success");
     String error = (String) request.getAttribute("error");
 %>
@@ -28,7 +29,7 @@
             <nav>
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/">Начало</a></li>
-                    <li><a href="${pageContext.request.contextPath}/employee-shipments">Пратки</a></li>
+                    <li><a href="${pageContext.request.contextPath}/employee-dashboard">Пратки</a></li>
                     <li>
                         <div class="user-info">
                             👤 <%= firstName + " " + lastName %>
@@ -43,8 +44,10 @@
 
     <main>
         <div class="page-header">
-            <h1>🏢 Управление на компании</h1>
-            <button onclick="openCreateModal()" class="btn btn-primary">➕ Добави компания</button>
+            <div>
+                <h1>🏢 Управление на компании</h1>
+            </div>
+            <button onclick="openAddModal()" class="btn btn-success">➕ Добави компания</button>
         </div>
 
         <% if (success != null) { %>
@@ -61,25 +64,39 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Име на компанията</th>
-                        <th>Действия</th>
+                        <th>ИМЕ НА КОМПАНИЯТА</th>
+                        <th>ДЕЙСТВИЯ</th>
                     </tr>
                     </thead>
                     <tbody>
                     <% if (companies != null && !companies.isEmpty()) { %>
-                    <% for (Company company : companies) { %>
+                    <% for (Company c : companies) { %>
                     <tr>
-                        <td><%= company.getId() %></td>
-                        <td><%= company.getName() %></td>
+                        <td><%= c.getId() %></td>
+                        <td><%= c.getName() %></td>
                         <td>
-                            <button onclick="openEditModal(<%= company.getId() %>, '<%= company.getName() %>')" class="btn-small btn-primary">✏️ Редактирай</button>
-                            <button onclick="confirmDelete(<%= company.getId() %>, '<%= company.getName() %>')" class="btn-small btn-danger">🗑️ Изтрий</button>
+                            <div class="action-buttons">
+                                <button onclick="openEditModal(<%= c.getId() %>, '<%= c.getName().replace("'", "\\'") %>')"
+                                        class="btn btn-primary">
+                                    🖊️ Редактирай
+                                </button>
+
+                                <form action="${pageContext.request.contextPath}/companies"
+                                      method="get"
+                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете <%= c.getName().replace("'", "\\'") %>?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<%= c.getId() %>">
+                                    <button type="submit" class="btn btn-danger">
+                                        🗑️ Изтрий
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     <% } %>
                     <% } else { %>
                     <tr>
-                        <td colspan="3" class="text-center">Няма регистрирани компании</td>
+                        <td colspan="3" class="text-center">Няма добавени компании.</td>
                     </tr>
                     <% } %>
                     </tbody>
@@ -87,7 +104,9 @@
             </div>
         </div>
 
-        <a href="${pageContext.request.contextPath}/" class="btn btn-outline">← Обратно към началото</a>
+        <div style="margin-top: 1.5rem;">
+            <a href="${pageContext.request.contextPath}/employee-dashboard" class="btn btn-outline">← Обратно към началото</a>
+        </div>
     </main>
 
     <footer>
@@ -95,38 +114,42 @@
     </footer>
 </div>
 
-<!-- Create/Edit Modal -->
+<!-- ADD/EDIT MODAL -->
 <div id="companyModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">Добави компания</h2>
-        <form method="post" action="${pageContext.request.contextPath}/companies">
-            <input type="hidden" id="companyId" name="id">
+        <div class="modal-header">
+            <h2 id="modalTitle">Добави компания</h2>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <form action="${pageContext.request.contextPath}/companies" method="post">
+            <input type="hidden" name="id" id="companyId">
 
-            <label for="companyName">Име на компанията *</label>
-            <input type="text" id="companyName" name="name" required>
+            <div class="form-group">
+                <label for="name">Име на компанията *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
 
             <div class="modal-actions">
                 <button type="button" onclick="closeModal()" class="btn btn-outline">Откажи</button>
-                <button type="submit" class="btn btn-primary">Запази</button>
+                <button type="submit" class="btn btn-success">Запази</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    function openCreateModal() {
+    function openAddModal() {
         document.getElementById('modalTitle').textContent = 'Добави компания';
         document.getElementById('companyId').value = '';
-        document.getElementById('companyName').value = '';
-        document.getElementById('companyModal').style.display = 'block';
+        document.getElementById('name').value = '';
+        document.getElementById('companyModal').style.display = 'flex';
     }
 
     function openEditModal(id, name) {
         document.getElementById('modalTitle').textContent = 'Редактирай компания';
         document.getElementById('companyId').value = id;
-        document.getElementById('companyName').value = name;
-        document.getElementById('companyModal').style.display = 'block';
+        document.getElementById('name').value = name;
+        document.getElementById('companyModal').style.display = 'flex';
     }
 
     function closeModal() {
@@ -134,11 +157,12 @@
     }
 
     function confirmDelete(id, name) {
-        if (confirm('Сигурни ли сте, че искате да изтриете компанията "' + name + '"?')) {
+        if (confirm('Сигурни ли сте, че искате да изтриете компанията "' + name + '"?\n\nВНИМАНИЕ: Това може да повлияе на офисите и пратките свързани с тази компания!')) {
             window.location.href = '${pageContext.request.contextPath}/companies?action=delete&id=' + id;
         }
     }
 
+    // Close modal when clicking outside
     window.onclick = function(event) {
         const modal = document.getElementById('companyModal');
         if (event.target == modal) {

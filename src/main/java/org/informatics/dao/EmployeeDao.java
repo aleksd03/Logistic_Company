@@ -8,14 +8,18 @@ import org.informatics.entity.Employee;
 import java.util.List;
 
 public class EmployeeDao {
-
-    public void save(Employee employee) {
+    public Employee save(Employee employee) {
         Transaction tx = null;
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.persist(employee);
+
+            Employee merged = session.merge(employee);
+
             tx.commit();
-            System.out.println("Employee saved successfully with ID: " + employee.getId());
+            System.out.println("Employee saved successfully with ID: " + merged.getId());
+            return merged;
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
@@ -23,20 +27,36 @@ public class EmployeeDao {
             System.err.println("ERROR saving employee: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Could not save employee", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
-    public void update(Employee employee) {
+    public Employee update(Employee employee) {
         Transaction tx = null;
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.merge(employee);
+
+            Employee updated = session.merge(employee);
+
             tx.commit();
+            System.out.println("✅ Employee updated: " + updated.getId());
+            return updated;
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
+            System.err.println("❌ ERROR updating employee: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException("Could not update employee", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
@@ -67,15 +87,57 @@ public class EmployeeDao {
 
     public void delete(Employee employee) {
         Transaction tx = null;
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.remove(employee);
+
+            Employee managedEmployee = session.merge(employee);
+            session.remove(managedEmployee);
+
+            tx.commit();
+            System.out.println("✅ Employee deleted: " + employee.getId());
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.err.println("❌ ERROR deleting employee: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete employee", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public void deleteById(Long id) {
+        Transaction tx = null;
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+
+            Employee employee = session.find(Employee.class, id);
+            if (employee != null) {
+                session.remove(employee);
+                System.out.println("✅ Employee deleted: " + id);
+            } else {
+                System.err.println("❌ Employee not found: " + id);
+            }
+
             tx.commit();
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
-            throw new RuntimeException("Could not delete employee", e);
+            System.err.println("❌ ERROR deleting employee: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete employee: " + e.getMessage(), e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }

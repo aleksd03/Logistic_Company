@@ -33,31 +33,50 @@ public class OfficesServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        try {
-            if ("edit".equals(action)) {
+        if ("delete".equals(action)) {
+            try {
+                Long id = Long.parseLong(request.getParameter("id"));
+                System.out.println("🗑️ Attempting to delete office with ID: " + id);
+
+                officeService.deleteOffice(id);
+
+                String successMsg = java.net.URLEncoder.encode("Офисът е изтрит успешно!", "UTF-8");
+                response.sendRedirect(request.getContextPath() + "/offices?success=" + successMsg);
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("❌ Error deleting office: " + e.getMessage());
+                String errorMsg = java.net.URLEncoder.encode("Грешка при изтриване: " + e.getMessage(), "UTF-8");
+                response.sendRedirect(request.getContextPath() + "/offices?error=" + errorMsg);
+                return;
+            }
+        }
+
+        if ("edit".equals(action)) {
+            try {
                 Long id = Long.parseLong(request.getParameter("id"));
                 Office office = officeService.getOfficeById(id);
-                List<Company> companies = companyService.getAllCompanies();
-                request.setAttribute("office", office);
-                request.setAttribute("companies", companies);
-                request.getRequestDispatcher("/WEB-INF/views/office-edit.jsp").forward(request, response);
-            } else if ("delete".equals(action)) {
-                Long id = Long.parseLong(request.getParameter("id"));
-                officeService.deleteOffice(id);
-                response.sendRedirect(request.getContextPath() + "/offices?success=Офисът е изтрит успешно!");
-            } else {
-                List<Office> offices = officeService.getAllOffices();
-                List<Company> companies = companyService.getAllCompanies();
-                request.setAttribute("offices", offices);
-                request.setAttribute("companies", companies);
-                request.getRequestDispatcher("/WEB-INF/views/offices.jsp").forward(request, response);
+                request.setAttribute("editOffice", office);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
+
+        try {
+            List<Office> offices = officeService.getAllOffices();
+            List<Company> companies = companyService.getAllCompanies();
+
+            request.setAttribute("offices", offices);
+            request.setAttribute("companies", companies);
+
+            request.getRequestDispatcher("/WEB-INF/views/offices.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Грешка: " + e.getMessage());
+            request.setAttribute("error", "Грешка при зареждане на офиси: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -79,22 +98,21 @@ public class OfficesServlet extends HttpServlet {
             if (idParam != null && !idParam.isEmpty()) {
                 Long id = Long.parseLong(idParam);
                 Office office = officeService.getOfficeById(id);
-                office.setAddress(address);
-                office.setCompany(company);
-                officeService.updateOffice(office);
-                response.sendRedirect(request.getContextPath() + "/offices?success=Офисът е актуализиран успешно!");
+                if (office != null) {
+                    office.setAddress(address);
+                    office.setCompany(company);
+                    officeService.updateOffice(office);
+                }
             } else {
                 officeService.createOffice(address, company);
-                response.sendRedirect(request.getContextPath() + "/offices?success=Офисът е създаден успешно!");
             }
+
+            response.sendRedirect(request.getContextPath() + "/offices");
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Грешка: " + e.getMessage());
-            List<Office> offices = officeService.getAllOffices();
-            List<Company> companies = companyService.getAllCompanies();
-            request.setAttribute("offices", offices);
-            request.setAttribute("companies", companies);
-            request.getRequestDispatcher("/WEB-INF/views/offices.jsp").forward(request, response);
+            String errorMsg = java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
+            response.sendRedirect(request.getContextPath() + "/offices?error=" + errorMsg);
         }
     }
 }

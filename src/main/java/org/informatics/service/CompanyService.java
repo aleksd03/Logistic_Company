@@ -47,9 +47,15 @@ public class CompanyService {
         if (id == null) {
             throw new IllegalArgumentException("Company ID cannot be null");
         }
-        Company company = getCompanyById(id);
-        if (company != null) {
-            repo.delete(company);
+
+        System.out.println("🗑️ Attempting to delete company with ID: " + id);
+
+        try {
+            repo.deleteById(id);
+            System.out.println("✅ Company deleted successfully (with cascade to offices)!");
+        } catch (Exception e) {
+            System.err.println("❌ Failed to delete company: " + e.getMessage());
+            throw new RuntimeException("Грешка при изтриване на компанията: " + e.getMessage(), e);
         }
     }
 }

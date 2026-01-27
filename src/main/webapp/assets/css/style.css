@@ -1369,6 +1369,87 @@ table td:last-child {
     flex: 0 0 auto;
 }
 
+/* === TABLE ALIGNMENT FIX === */
+table th,
+table td {
+    text-align: left;
+    vertical-align: middle;
+}
+
+table th:last-child,
+table td:last-child {
+    text-align: center;
+}
+
+table td {
+    white-space: nowrap;
+}
+
+/* === MODAL AND FORM ACTIONS ALIGNMENT FIX === */
+.modal-actions,
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.modal-actions .btn,
+.form-actions .btn,
+.modal-actions button,
+.form-actions button {
+    width: auto;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+/* === TABLE PERFECT ALIGNMENT === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead th {
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+table th:first-child,
+table td:first-child {
+    text-align: center;
+}
+
+.status {
+    display: inline-block;
+}
+
+/* === TABLE ACTION BUTTONS === */
+table td .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+table td .action-buttons .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+table td .action-buttons form {
+    margin: 0;
+    padding: 0;
+}
+
 /* === RESPONSIVE FIXES === */
 @media (max-width: 768px) {
     .page-header {

@@ -9,54 +9,164 @@ import java.util.List;
 
 public class ClientDao {
 
-    public void save(Client client) {
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
+    public Client save(Client client) {
+        Transaction tx = null;
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
             session.persist(client);
             tx.commit();
+            System.out.println("Client saved successfully with ID: " + client.getId());
+            return client;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.err.println("ERROR saving client: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not save client", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
-    public void update(Client client) {
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            session.merge(client);
+    public Client update(Client client) {
+        Transaction tx = null;
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+            Client updated = session.merge(client);
             tx.commit();
+            return updated;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.err.println("ERROR updating client: " + e.getMessage());
+            throw new RuntimeException("Could not update client", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     public void delete(Client client) {
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            session.remove(client);
+        Transaction tx = null;
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+
+            Client managedClient = session.merge(client);
+            session.remove(managedClient);
+
             tx.commit();
+            System.out.println("✅ Client deleted: " + client.getId());
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.err.println("❌ ERROR deleting client: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete client", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public void deleteById(Long id) {
+        Transaction tx = null;
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+
+            Client client = session.find(Client.class, id);
+            if (client != null) {
+                session.remove(client);
+                System.out.println("✅ Client deleted: " + id);
+            } else {
+                System.err.println("❌ Client not found: " + id);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.err.println("❌ ERROR deleting client: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete client: " + e.getMessage(), e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     public Client findById(Long id) {
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             return session.find(Client.class, id);
+        } catch (Exception e) {
+            System.err.println("ERROR finding client by ID: " + e.getMessage());
+            return null;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     public List<Client> findAll() {
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Client", Client.class).list();
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            return session.createQuery(
+                            "SELECT DISTINCT c FROM Client c " +
+                                    "LEFT JOIN FETCH c.user " +
+                                    "LEFT JOIN FETCH c.company",
+                            Client.class)
+                    .list();
+        } catch (Exception e) {
+            System.err.println("ERROR finding all clients: " + e.getMessage());
+            e.printStackTrace();
+            return List.of();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     public Client findByUserId(Long userId) {
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             return session.createQuery(
-                            "from Client c where c.user.id = :userId",
+                            "SELECT DISTINCT c FROM Client c " +
+                                    "LEFT JOIN FETCH c.user u " +
+                                    "LEFT JOIN FETCH c.company " +
+                                    "WHERE u.id = :userId",
                             Client.class)
                     .setParameter("userId", userId)
                     .uniqueResult();
         } catch (Exception e) {
-            System.err.println("Error finding client by user ID: " + e.getMessage());
+            System.err.println("ERROR finding client by user ID: " + e.getMessage());
             e.printStackTrace();
             return null;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }
-

@@ -10,7 +10,9 @@ import java.util.List;
 public class CompanyDao {
     public Company save(Company company) {
         Transaction tx = null;
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
             session.persist(company);
             tx.commit();
@@ -23,6 +25,10 @@ public class CompanyDao {
             System.err.println("ERROR saving company: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Could not save company", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
@@ -42,19 +48,33 @@ public class CompanyDao {
         }
     }
 
-    public void delete(Company company) {
+    public void deleteById(Long id) {
         Transaction tx = null;
-        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.remove(company);
+
+            Company company = session.find(Company.class, id);
+            if (company != null) {
+                session.remove(company);  // CASCADE ще изтрие offices
+                System.out.println("✅ Company deleted (cascade to offices): " + id);
+            } else {
+                System.err.println("❌ Company not found: " + id);
+            }
+
             tx.commit();
-            System.out.println("Company deleted: " + company.getId());
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
-            System.err.println("ERROR deleting company: " + e.getMessage());
-            throw new RuntimeException("Could not delete company", e);
+            System.err.println("❌ ERROR deleting company: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete company: " + e.getMessage(), e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 

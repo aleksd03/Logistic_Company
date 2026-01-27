@@ -15,7 +15,7 @@ import org.informatics.entity.enums.EmployeeType;
 @Table(name = "employees")
 public class Employee extends BaseEntity {
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 

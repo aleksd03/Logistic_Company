@@ -48,9 +48,18 @@ public class OfficeService {
     }
 
     public void deleteOffice(Long id) {
-        Office office = getOfficeById(id);
-        if (office != null) {
-            repo.delete(office);
+        if (id == null) {
+            throw new IllegalArgumentException("Office ID cannot be null");
+        }
+
+        System.out.println("🗑️ Deleting office with ID: " + id);
+
+        try {
+            repo.deleteById(id);
+            System.out.println("✅ Office deleted successfully!");
+        } catch (Exception e) {
+            System.err.println("❌ Failed to delete office: " + e.getMessage());
+            throw new RuntimeException("Грешка при изтриване на офиса: " + e.getMessage(), e);
         }
     }
 }

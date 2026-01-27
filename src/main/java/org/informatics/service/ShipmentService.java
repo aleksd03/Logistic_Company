@@ -26,7 +26,6 @@ public class ShipmentService {
             throw new IllegalArgumentException("Подател, получател и служител са задължителни");
         }
 
-        // ФИКС: използвай Objects.equals() за null-safe сравнение
         if (Objects.equals(sender.getId(), receiver.getId())) {
             throw new IllegalArgumentException("Подателят и получателят не могат да бъдат едно и също лице");
         }
@@ -39,7 +38,6 @@ public class ShipmentService {
 
         double price = pricingService.calculatePrice(weight, deliveryToOffice);
 
-        // Създай пратка
         Shipment shipment = new Shipment();
         shipment.setSender(sender);
         shipment.setReceiver(receiver);
@@ -47,10 +45,18 @@ public class ShipmentService {
         shipment.setWeight(weight);
         shipment.setPrice(price);
         shipment.setDeliveryToOffice(deliveryToOffice);
-        shipment.setDeliveryOffice(deliveryOffice);
-        shipment.setDeliveryAddress(deliveryAddress);
+
+        if (deliveryToOffice && deliveryOffice != null) {
+            shipment.setDeliveryOffice(deliveryOffice);
+            shipment.setDeliveryAddress(deliveryOffice.getAddress());
+        } else {
+            shipment.setDeliveryOffice(null);
+            shipment.setDeliveryAddress(deliveryAddress);
+        }
+
         shipment.setStatus(ShipmentStatus.SENT);
         shipment.setRegistrationDate(LocalDateTime.now());
+        shipment.setDeliveryDate(null);
 
         return repo.save(shipment);
     }

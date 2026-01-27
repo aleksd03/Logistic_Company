@@ -11,7 +11,7 @@ import java.util.List;
 public class EmployeeService {
     private final EmployeeDao repo = new EmployeeDao();
 
-    public void createForUser(User user, Company company, Office office) {
+    public Employee createForUser(User user, Company company, Office office) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -21,8 +21,10 @@ public class EmployeeService {
         e.setCompany(company);
         e.setOffice(office);
 
-        repo.save(e);
+        Employee saved = repo.save(e);
         System.out.println("Employee created for user: " + user.getEmail());
+
+        return saved;
     }
 
     public Employee getEmployeeByUserId(Long userId) {
@@ -41,5 +43,29 @@ public class EmployeeService {
 
     public List<Employee> getAllEmployees() {
         return repo.findAll();
+    }
+
+    public Employee updateEmployee(Employee employee) {
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee cannot be null");
+        }
+        System.out.println("📝 Updating employee: " + employee.getId());
+        return repo.update(employee);
+    }
+
+    public void deleteEmployee(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Employee ID cannot be null");
+        }
+
+        System.out.println("🗑️ Deleting employee with ID: " + id);
+
+        try {
+            repo.deleteById(id);
+            System.out.println("✅ Employee deleted successfully!");
+        } catch (Exception e) {
+            System.err.println("❌ Failed to delete employee: " + e.getMessage());
+            throw new RuntimeException("Грешка при изтриване на служителя: " + e.getMessage(), e);
+        }
     }
 }

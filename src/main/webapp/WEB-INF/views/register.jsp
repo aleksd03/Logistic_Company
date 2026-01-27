@@ -55,7 +55,18 @@
                     <option value="EMPLOYEE">Служител</option>
                 </select>
 
-                <div id="companyCheckboxContainer" class="checkbox-container">
+                <!-- EMPLOYEE TYPE (показва се само за EMPLOYEE) -->
+                <div id="employeeTypeContainer" style="display: none;">
+                    <label for="employeeType">Тип служител *</label>
+                    <select id="employeeType" name="employeeType">
+                        <option value="">-- Изберете тип --</option>
+                        <option value="OFFICE_EMPLOYEE">Офис служител</option>
+                        <option value="COURIER">Куриер</option>
+                    </select>
+                </div>
+
+                <!-- COMPANY CHECKBOX (показва се само за CLIENT) -->
+                <div id="companyCheckboxContainer" class="checkbox-container" style="display: none;">
                     <label class="checkbox-label">
                         <input type="checkbox" id="isCompany" name="isCompany" value="true">
                         <span>Регистрация като фирма</span>
@@ -95,23 +106,49 @@
         if (password !== confirmPassword) {
             e.preventDefault();
             alert('Паролите не съвпадат!');
+            return;
+        }
+
+        // Validate employee type if EMPLOYEE role is selected
+        const role = document.getElementById('role').value;
+        const employeeType = document.getElementById('employeeType').value;
+
+        if (role === 'EMPLOYEE' && !employeeType) {
+            e.preventDefault();
+            alert('Моля изберете тип служител!');
+            return;
         }
     });
 
-    // Show/hide company checkbox based on role
+    // Show/hide fields based on role
     document.getElementById('role').addEventListener('change', function() {
         const companyCheckboxContainer = document.getElementById('companyCheckboxContainer');
+        const employeeTypeContainer = document.getElementById('employeeTypeContainer');
         const isCompanyCheckbox = document.getElementById('isCompany');
         const companyFields = document.getElementById('companyFields');
         const companyNameInput = document.getElementById('companyName');
+        const employeeTypeSelect = document.getElementById('employeeType');
 
         if (this.value === 'CLIENT') {
+            // Show company checkbox for CLIENT
             companyCheckboxContainer.style.display = 'block';
-        } else {
+            employeeTypeContainer.style.display = 'none';
+            employeeTypeSelect.value = '';
+        } else if (this.value === 'EMPLOYEE') {
+            // Show employee type for EMPLOYEE
+            employeeTypeContainer.style.display = 'block';
             companyCheckboxContainer.style.display = 'none';
             isCompanyCheckbox.checked = false;
             companyFields.classList.remove('visible');
             companyNameInput.value = '';
+        } else {
+            // Hide both if no role selected
+            companyCheckboxContainer.style.display = 'none';
+            employeeTypeContainer.style.display = 'none';
+            isCompanyCheckbox.checked = false;
+            companyFields.classList.remove('visible');
+            companyNameInput.value = '';
+            employeeTypeSelect.value = '';
         }
     });
 

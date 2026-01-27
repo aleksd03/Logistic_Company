@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.informatics.entity.Employee" %>
+<%@ page import="org.informatics.entity.Company" %>
+<%@ page import="org.informatics.entity.Office" %>
 <%@ page import="org.informatics.entity.enums.Role" %>
 <%
     String userEmail = (String) session.getAttribute("userEmail");
@@ -9,6 +11,8 @@
     Role userRole = (Role) session.getAttribute("userRole");
 
     List<Employee> employees = (List<Employee>) request.getAttribute("employees");
+    List<Company> companies = (List<Company>) request.getAttribute("companies");
+    List<Office> offices = (List<Office>) request.getAttribute("offices");
     String success = request.getParameter("success");
     String error = (String) request.getAttribute("error");
 %>
@@ -61,28 +65,51 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Име</th>
-                        <th>Имейл</th>
-                        <th>Компания</th>
-                        <th>Офис</th>
-                        <th>Дата на регистрация</th>
+                        <th>ИМЕ</th>
+                        <th>EMAIL</th>
+                        <th>КОМПАНИЯ</th>
+                        <th>ОФИС</th>
+                        <th>ДАТА НА РЕГИСТРАЦИЯ</th>
+                        <th>ДЕЙСТВИЯ</th>
                     </tr>
                     </thead>
                     <tbody>
                     <% if (employees != null && !employees.isEmpty()) { %>
-                    <% for (Employee employee : employees) { %>
+                    <% for (Employee e : employees) { %>
                     <tr>
-                        <td><%= employee.getId() %></td>
-                        <td><%= employee.getUser().getFirstName() + " " + employee.getUser().getLastName() %></td>
-                        <td><%= employee.getUser().getEmail() %></td>
-                        <td><%= employee.getCompany() != null ? employee.getCompany().getName() : "Без компания" %></td>
-                        <td><%= employee.getOffice() != null ? employee.getOffice().getAddress() : "Без офис" %></td>
-                        <td><%= employee.getUser().getCreatedAt() %></td>
+                        <td><%= e.getId() %></td>
+                        <td>
+                            <%= e.getUser() != null
+                                    ? e.getUser().getFirstName() + " " + e.getUser().getLastName()
+                                    : "N/A" %>
+                        </td>
+                        <td><%= e.getUser() != null ? e.getUser().getEmail() : "N/A" %></td>
+                        <td><%= e.getCompany() != null ? e.getCompany().getName() : "Без компания" %></td>
+                        <td><%= e.getOffice() != null ? e.getOffice().getAddress() : "Без офис" %></td>
+                        <td><%= e.getUser() != null ? e.getUser().getCreatedAt().toString().substring(0, 16).replace("T", " ") : "N/A" %></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button onclick="openEditModal(<%= e.getId() %>, <%= e.getCompany() != null ? e.getCompany().getId() : "null" %>, <%= e.getOffice() != null ? e.getOffice().getId() : "null" %>)"
+                                        class="btn btn-primary">
+                                    🖊️ Редактирай
+                                </button>
+
+                                <form action="${pageContext.request.contextPath}/employees"
+                                      method="get"
+                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете служителя <%= e.getUser() != null ? e.getUser().getFirstName() + " " + e.getUser().getLastName() : "" %>?\\n\\nВНИМАНИЕ: Това може да повлияе на пратките регистрирани от този служител!');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<%= e.getId() %>">
+                                    <button type="submit" class="btn btn-danger">
+                                        🗑️ Изтрий
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                     <% } %>
                     <% } else { %>
                     <tr>
-                        <td colspan="6" class="text-center">Няма регистрирани служители</td>
+                        <td colspan="7" class="text-center">Няма регистрирани служители.</td>
                     </tr>
                     <% } %>
                     </tbody>
@@ -96,6 +123,98 @@
     <footer>
         <p>&copy; 2025 ALVAS Logistics. Всички права запазени.</p>
     </footer>
+
+    <!-- EDIT MODAL -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Редактирај служител</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form action="${pageContext.request.contextPath}/employees" method="post">
+                <input type="hidden" name="id" id="employeeId">
+
+                <div class="form-group">
+                    <label for="companyId">Компания</label>
+                    <select id="companyId" name="companyId" onchange="loadOffices()">
+                        <option value="">Без компания</option>
+                        <% if (companies != null) {
+                            for (Company comp : companies) { %>
+                        <option value="<%= comp.getId() %>"><%= comp.getName() %></option>
+                        <%  }
+                        } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="officeId">Офис</label>
+                    <select id="officeId" name="officeId">
+                        <option value="">Без офис</option>
+                        <% if (offices != null) {
+                            for (Office off : offices) { %>
+                        <option value="<%= off.getId() %>" data-company="<%= off.getCompany() != null ? off.getCompany().getId() : "" %>">
+                            <%= off.getAddress() %>
+                        </option>
+                        <%  }
+                        } %>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeModal()" class="btn btn-outline">Откажи</button>
+                    <button type="submit" class="btn btn-success">Запази</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(employeeId, companyId, officeId) {
+            document.getElementById('employeeId').value = employeeId;
+            document.getElementById('companyId').value = companyId || '';
+
+            loadOffices();
+
+            document.getElementById('officeId').value = officeId || '';
+            document.getElementById('employeeModal').style.display = 'flex';
+        }
+
+        function loadOffices() {
+            const companyId = document.getElementById('companyId').value;
+            const officeSelect = document.getElementById('officeId');
+            const options = officeSelect.getElementsByTagName('option');
+
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                if (option.value === '') {
+                    option.style.display = 'block';
+                } else {
+                    const optionCompany = option.getAttribute('data-company');
+                    if (!companyId || optionCompany === companyId) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                }
+            }
+
+            const selectedOption = officeSelect.options[officeSelect.selectedIndex];
+            if (selectedOption && selectedOption.getAttribute('data-company') !== companyId && companyId !== '') {
+                officeSelect.value = '';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('employeeModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('employeeModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
 </div>
 </body>
 </html>

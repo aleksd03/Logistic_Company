@@ -10,13 +10,14 @@ import org.informatics.service.ClientService;
 import org.informatics.service.ShipmentService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/client-shipments")
 public class ClientShipmentsServlet extends HttpServlet {
 
-    private final ClientService clientService = new ClientService();
     private final ShipmentService shipmentService = new ShipmentService();
+    private final ClientService clientService = new ClientService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,59 +25,44 @@ public class ClientShipmentsServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        System.out.println("=== CLIENT SHIPMENTS DEBUG ===");
-
-        if (session == null) {
-            System.out.println("No session - redirecting to login");
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-
-        Long userId = (Long) session.getAttribute("userId");
-        Role userRole = (Role) session.getAttribute("userRole");
-
-        System.out.println("User ID: " + userId);
-        System.out.println("User Role: " + userRole);
-
-        if (userId == null || userRole == null) {
-            System.out.println("Session invalid - redirecting to login");
-            session.invalidate();
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-
-        if (userRole != Role.CLIENT) {
-            System.out.println("Not a CLIENT - forbidden");
+        if (session == null || session.getAttribute("userRole") != Role.CLIENT) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
         try {
+            Long userId = (Long) session.getAttribute("userId");
+
+            // Намери клиента
             Client client = clientService.getClientByUserId(userId);
 
             if (client == null) {
-                System.out.println("Client not found for user ID: " + userId);
-                request.setAttribute("error", "Клиентски профил не е намерен!");
-                request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-                return;
+                throw new RuntimeException("Client not found for user ID: " + userId);
             }
 
-            System.out.println("Client found: ID=" + client.getId());
-
+            // Вземи всички пратки където клиентът е подател ИЛИ получател
             List<Shipment> sentShipments = shipmentService.getShipmentsBySender(client.getId());
             List<Shipment> receivedShipments = shipmentService.getShipmentsByReceiver(client.getId());
 
-            System.out.println("Sent shipments: " + sentShipments.size());
-            System.out.println("Received shipments: " + receivedShipments.size());
-            System.out.println("==============================");
+            List<Shipment> allShipments = new ArrayList<>();
+            allShipments.addAll(sentShipments);
+            allShipments.addAll(receivedShipments);
 
-            request.setAttribute("sentShipments", sentShipments);
-            request.setAttribute("receivedShipments", receivedShipments);
+            List<Shipment> uniqueShipments = allShipments.stream()
+                    .distinct()
+                    .sorted((s1, s2) -> s2.getRegistrationDate().compareTo(s1.getRegistrationDate()))
+                    .toList();
+
+            request.setAttribute("shipments", uniqueShipments);
+            request.setAttribute("clientId", client.getId());
+
+            System.out.println("Client " + client.getId() + " has " + uniqueShipments.size() + " shipments");
+
             request.getRequestDispatcher("/WEB-INF/views/client-shipments.jsp").forward(request, response);
 
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
+            System.err.println("ERROR loading client shipments: " + e.getMessage());
             request.setAttribute("error", "Грешка при зареждане на пратки: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
