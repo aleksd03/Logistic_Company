@@ -9,11 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c4038e2-7717-491e-8279-95abd1199387" name="Changes" comment="feat: Complete CRUD operations for all entities (Edit, Delete, Mark as Received)&#10;&#10;- Implemented Edit &amp; Delete for Clients with company assignment&#10;- Implemented Edit &amp; Delete for Employees with employee type, company, and office&#10;- Implemented Edit &amp; Delete for Offices with duplicate address validation&#10;- Implemented Edit, Delete, and Mark as Received for Shipments&#10;- Fixed detached entity issues by using merge() instead of persist()&#10;- Added Employee Type badges and filtering in UI&#10;- Updated all DAOs with proper transaction handling&#10;- Added error alerts for offices with duplicate addresses&#10;- Improved modal forms with proper field validation&#10;&#10;All entities now have full CRUD functionality with cascading deletes&#10;and proper foreign key constraints (ON DELETE SET NULL where appropriate).">
+    <list default="true" id="1c4038e2-7717-491e-8279-95abd1199387" name="Changes" comment="- filter shipments by employee">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/UndeliveredShipmentsServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/undelivered-shipments.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/EmployeeShipmentsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/EmployeeShipmentsServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employee-shipments.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employee-shipments.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/css/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,9 +48,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jsp File" />
         <option value="Enum" />
         <option value="Class" />
+        <option value="Jsp File" />
       </list>
     </option>
   </component>
@@ -252,7 +252,7 @@
       <workItem from="1769451250808" duration="4612000" />
       <workItem from="1769469380923" duration="7731000" />
       <workItem from="1769477289710" duration="163000" />
-      <workItem from="1769515762250" duration="7183000" />
+      <workItem from="1769515762250" duration="8047000" />
     </task>
     <task id="LOCAL-00001" summary="Restructure">
       <option name="closed" value="true" />
@@ -342,7 +342,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769519610661</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="- filter shipments by employee">
+      <option name="closed" value="true" />
+      <created>1769523063825</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1769523063825</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -370,7 +378,8 @@
     <MESSAGE value="а" />
     <MESSAGE value="- create part of the 3rd point and correct the css file" />
     <MESSAGE value="feat: Complete CRUD operations for all entities (Edit, Delete, Mark as Received)&#10;&#10;- Implemented Edit &amp; Delete for Clients with company assignment&#10;- Implemented Edit &amp; Delete for Employees with employee type, company, and office&#10;- Implemented Edit &amp; Delete for Offices with duplicate address validation&#10;- Implemented Edit, Delete, and Mark as Received for Shipments&#10;- Fixed detached entity issues by using merge() instead of persist()&#10;- Added Employee Type badges and filtering in UI&#10;- Updated all DAOs with proper transaction handling&#10;- Added error alerts for offices with duplicate addresses&#10;- Improved modal forms with proper field validation&#10;&#10;All entities now have full CRUD functionality with cascading deletes&#10;and proper foreign key constraints (ON DELETE SET NULL where appropriate)." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Complete CRUD operations for all entities (Edit, Delete, Mark as Received)&#10;&#10;- Implemented Edit &amp; Delete for Clients with company assignment&#10;- Implemented Edit &amp; Delete for Employees with employee type, company, and office&#10;- Implemented Edit &amp; Delete for Offices with duplicate address validation&#10;- Implemented Edit, Delete, and Mark as Received for Shipments&#10;- Fixed detached entity issues by using merge() instead of persist()&#10;- Added Employee Type badges and filtering in UI&#10;- Updated all DAOs with proper transaction handling&#10;- Added error alerts for offices with duplicate addresses&#10;- Improved modal forms with proper field validation&#10;&#10;All entities now have full CRUD functionality with cascading deletes&#10;and proper foreign key constraints (ON DELETE SET NULL where appropriate)." />
+    <MESSAGE value="- filter shipments by employee" />
+    <option name="LAST_COMMIT_MESSAGE" value="- filter shipments by employee" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Logistic_Company$Tomcat_10_1_48.ic" NAME="Tomcat 10.1.48 Coverage Results" MODIFIED="1767558405003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />

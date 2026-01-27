@@ -152,7 +152,7 @@
                             <div class="action-buttons">
                                 <button onclick="openEditModal(<%= s.getId() %>, <%= s.getWeight() %>, '<%= s.getDeliveryToOffice() %>', <%= s.getDeliveryOffice() != null ? s.getDeliveryOffice().getId() : "null" %>, '<%= s.getDeliveryAddress() != null ? s.getDeliveryAddress().replace("'", "\\'") : "" %>')"
                                         class="btn btn-primary">
-                                    🖊️ Редактирај
+                                    🖊️ Редактирай
                                 </button>
 
                                 <% if (s.getStatus() == ShipmentStatus.SENT) { %>
@@ -199,6 +199,7 @@
 
         <div style="margin-top: 1.5rem;">
             <a href="${pageContext.request.contextPath}/shipment-register" class="btn btn-success">➕ Регистрирай нова пратка</a>
+            <a href="${pageContext.request.contextPath}/undelivered-shipments" class="btn" style="background: #ff9800; color: white; border: 2px solid #f57c00;">⚠️ Неполучени пратки</a>
             <a href="${pageContext.request.contextPath}/" class="btn btn-outline">← Обратно към началото</a>
         </div>
     </main>
