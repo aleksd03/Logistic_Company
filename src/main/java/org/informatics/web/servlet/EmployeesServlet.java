@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.informatics.entity.Company;
 import org.informatics.entity.Employee;
 import org.informatics.entity.Office;
+import org.informatics.entity.enums.EmployeeType;
 import org.informatics.entity.enums.Role;
 import org.informatics.service.CompanyService;
 import org.informatics.service.EmployeeService;
@@ -57,7 +58,7 @@ public class EmployeesServlet extends HttpServlet {
         }
 
         try {
-                List<Employee> employees = employeeService.getAllEmployees();
+            List<Employee> employees = employeeService.getAllEmployees();
             List<Company> companies = companyService.getAllCompanies();
             List<Office> offices = officeService.getAllOffices();
 
@@ -88,6 +89,7 @@ public class EmployeesServlet extends HttpServlet {
             String idParam = request.getParameter("id");
             String companyIdParam = request.getParameter("companyId");
             String officeIdParam = request.getParameter("officeId");
+            String employeeTypeParam = request.getParameter("employeeType");
 
             if (idParam != null && !idParam.isEmpty()) {
                 // UPDATE EMPLOYEE
@@ -95,6 +97,11 @@ public class EmployeesServlet extends HttpServlet {
                 Employee employee = employeeService.getEmployeeById(employeeId);
 
                 if (employee != null) {
+                    if (employeeTypeParam != null && !employeeTypeParam.isEmpty()) {
+                        EmployeeType employeeType = EmployeeType.valueOf(employeeTypeParam);
+                        employee.setEmployeeType(employeeType);
+                    }
+
                     // Update company
                     if (companyIdParam != null && !companyIdParam.isEmpty()) {
                         Long companyId = Long.parseLong(companyIdParam);
@@ -118,13 +125,13 @@ public class EmployeesServlet extends HttpServlet {
                 }
             }
 
-            String successMsg = java.net.URLEncoder.encode("Служителят е актуализиран успешно!", StandardCharsets.UTF_8);
+            String successMsg = java.net.URLEncoder.encode("Служителят е актуализиран успешно!", "UTF-8");
             response.sendRedirect(request.getContextPath() + "/employees?success=" + successMsg);
 
         } catch (Exception e) {
             e.printStackTrace();
-            String errorMsg = java.net.URLEncoder.encode("Грешка: " + e.getMessage(), StandardCharsets.UTF_8);
+            String errorMsg = java.net.URLEncoder.encode("Грешка: " + e.getMessage(), "UTF-8");
             response.sendRedirect(request.getContextPath() + "/employees?error=" + errorMsg);
         }
-        }
     }
+}

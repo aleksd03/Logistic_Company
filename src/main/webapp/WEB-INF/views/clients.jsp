@@ -90,7 +90,7 @@
 
                                 <form action="${pageContext.request.contextPath}/clients"
                                       method="get"
-                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете клиента <%= c.getUser() != null ? c.getUser().getFirstName() + " " + c.getUser().getLastName() : "" %>?\\n\\nВНИМАНИЕ: Това може да повлияе на пратките свързани с този клиент!');">
+                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете клиента <%= c.getUser() != null ? c.getUser().getFirstName() + " " + c.getUser().getLastName() : "" %>?\n\nВНИМАНИЕ: Това може да повлияе на пратките свързани с този клиент!');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<%= c.getId() %>">
                                     <button type="submit" class="btn btn-danger">

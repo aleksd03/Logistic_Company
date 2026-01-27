@@ -9,38 +9,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c4038e2-7717-491e-8279-95abd1199387" name="Changes" comment="а">
+    <list default="true" id="1c4038e2-7717-491e-8279-95abd1199387" name="Changes" comment="- create part of the 3rd point and correct the css file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/configuration/SessionFactoryUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/configuration/SessionFactoryUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/dao/ClientDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/dao/ClientDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/dao/CompanyDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/dao/CompanyDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/dao/EmployeeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/dao/EmployeeDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/dao/OfficeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/dao/OfficeDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/dao/ShipmentDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/dao/ShipmentDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Shipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/entity/Shipment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/CompanyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/CompanyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/EmployeeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/entity/BaseEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/entity/BaseEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/OfficeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/OfficeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/ShipmentQueryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/ShipmentQueryService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/ShipmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/ShipmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ClientShipmentsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ClientShipmentsServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ClientsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ClientsServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/CompaniesServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/CompaniesServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/EmployeeShipmentsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/EmployeeShipmentsServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/EmployeesServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/EmployeesServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/OfficesServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/OfficesServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/RegisterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/RegisterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ShipmentRegisterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ShipmentRegisterServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/client-shipments.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/client-shipments.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/clients.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/clients.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/companies.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/companies.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employee-shipments.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employee-shipments.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employees.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employees.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/offices.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/offices.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/css/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -279,6 +263,8 @@
       <workItem from="1769431685508" duration="4196000" />
       <workItem from="1769451250808" duration="4612000" />
       <workItem from="1769469380923" duration="7731000" />
+      <workItem from="1769477289710" duration="163000" />
+      <workItem from="1769515762250" duration="3635000" />
     </task>
     <task id="LOCAL-00001" summary="Restructure">
       <option name="closed" value="true" />
@@ -352,7 +338,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769435995497</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="- create part of the 3rd point and correct the css file">
+      <option name="closed" value="true" />
+      <created>1769477338651</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1769477338651</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -378,7 +372,8 @@
     <MESSAGE value="-fixing configuration" />
     <MESSAGE value="- Fix session management and filters&#10;- Implement services and DAOs for Client/Shipment/Company&#10;- Add company registration during signup&#10;- Fix entity nullable fields&#10;- UI improvements (navigation, error pages, styling)" />
     <MESSAGE value="а" />
-    <option name="LAST_COMMIT_MESSAGE" value="а" />
+    <MESSAGE value="- create part of the 3rd point and correct the css file" />
+    <option name="LAST_COMMIT_MESSAGE" value="- create part of the 3rd point and correct the css file" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Logistic_Company$Tomcat_10_1_48.ic" NAME="Tomcat 10.1.48 Coverage Results" MODIFIED="1767558405003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />

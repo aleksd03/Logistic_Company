@@ -1450,6 +1450,33 @@ table td .action-buttons form {
     padding: 0;
 }
 
+/* === EMPLOYEE TYPE BADGES === */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.badge-courier {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #90caf9;
+}
+
+.badge-office {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #ce93d8;
+}
+
+.badge-unknown {
+    background-color: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffb74d;
+}
+
 /* === RESPONSIVE FIXES === */
 @media (max-width: 768px) {
     .page-header {

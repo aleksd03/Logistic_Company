@@ -69,7 +69,7 @@ public class EmployeeDao {
     public Employee findByUserId(Long userId) {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             return session.createQuery(
-                            "FROM Employee e WHERE e.user.id = :userId",
+                            "SELECT e FROM Employee e JOIN e.user u WHERE u.id = :userId",
                             Employee.class)
                     .setParameter("userId", userId)
                     .uniqueResult();
@@ -96,7 +96,7 @@ public class EmployeeDao {
             session.remove(managedEmployee);
 
             tx.commit();
-            System.out.println("✅ Employee deleted: " + employee.getId());
+            System.out.println("✅ Employee deleted: " + managedEmployee.getId());
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();

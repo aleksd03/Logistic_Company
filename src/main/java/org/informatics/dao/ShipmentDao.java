@@ -38,14 +38,18 @@ public class ShipmentDao {
         try {
             session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
+
             Shipment updated = session.merge(shipment);
+
             tx.commit();
+            System.out.println("✅ Shipment updated: " + updated.getId());
             return updated;
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
-            System.err.println("ERROR updating shipment: " + e.getMessage());
+            System.err.println("❌ ERROR updating shipment: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException("Could not update shipment", e);
         } finally {
             if (session != null) {
@@ -60,15 +64,50 @@ public class ShipmentDao {
         try {
             session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.remove(shipment);
+
+            // ВАЖНО: merge entity-то за detached entities
+            Shipment managedShipment = session.merge(shipment);
+            session.remove(managedShipment);
+
             tx.commit();
-            System.out.println("Shipment deleted: " + shipment.getId());
+            System.out.println("✅ Shipment deleted: " + managedShipment.getId());
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
-            System.err.println("ERROR deleting shipment: " + e.getMessage());
+            System.err.println("❌ ERROR deleting shipment: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException("Could not delete shipment", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public void deleteById(Long id) {
+        Transaction tx = null;
+        Session session = null;
+        try {
+            session = SessionFactoryUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+
+            Shipment shipment = session.find(Shipment.class, id);
+            if (shipment != null) {
+                session.remove(shipment);
+                System.out.println("✅ Shipment deleted: " + id);
+            } else {
+                System.err.println("❌ Shipment not found: " + id);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.err.println("❌ ERROR deleting shipment: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Could not delete shipment: " + e.getMessage(), e);
         } finally {
             if (session != null) {
                 session.close();

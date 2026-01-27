@@ -9,7 +9,6 @@ import org.informatics.entity.Shipment;
 import java.util.List;
 
 public class ShipmentQueryService {
-
     public List<ShipmentDto> getAllForEmployee() {
         try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
             List<Shipment> list = session.createQuery("from Shipment", Shipment.class).list();

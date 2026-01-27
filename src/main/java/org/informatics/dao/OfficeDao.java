@@ -134,4 +134,17 @@ public class OfficeDao {
             return List.of();
         }
     }
+
+    public Office findByAddress(String address) {
+        try (Session session = SessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "FROM Office o WHERE o.address = :address",
+                            Office.class)
+                    .setParameter("address", address)
+                    .uniqueResult();
+        } catch (Exception e) {
+            System.err.println("ERROR finding office by address: " + e.getMessage());
+            return null;
+        }
+    }
 }

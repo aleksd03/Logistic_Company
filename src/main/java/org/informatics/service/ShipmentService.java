@@ -6,7 +6,7 @@ import org.informatics.entity.enums.ShipmentStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;  // ДОБАВИ ТОЗИ IMPORT!
+import java.util.Objects;
 
 public class ShipmentService {
 
@@ -61,10 +61,36 @@ public class ShipmentService {
         return repo.save(shipment);
     }
 
-    public void markAsReceived(Long shipmentId) {
-        Shipment shipment = repo.findById(shipmentId);
+    public void updateShipment(Long id, double weight, boolean deliveryToOffice,
+                               Office deliveryOffice, String deliveryAddress) {
+        Shipment shipment = getShipmentById(id);
         if (shipment == null) {
-            throw new RuntimeException("Пратка с ID " + shipmentId + " не съществува");
+            throw new RuntimeException("Shipment not found with ID: " + id);
+        }
+
+        shipment.setWeight(weight);
+        shipment.setDeliveryToOffice(deliveryToOffice);
+
+        if (deliveryToOffice && deliveryOffice != null) {
+            shipment.setDeliveryOffice(deliveryOffice);
+            shipment.setDeliveryAddress(deliveryOffice.getAddress());
+        } else {
+            shipment.setDeliveryOffice(null);
+            shipment.setDeliveryAddress(deliveryAddress);
+        }
+
+        // Recalculate price
+        double newPrice = pricingService.calculatePrice(weight, deliveryToOffice);
+        shipment.setPrice(newPrice);
+
+        repo.update(shipment);
+        System.out.println("✅ Shipment updated: " + id);
+    }
+
+    public void markAsReceived(Long id) {
+        Shipment shipment = getShipmentById(id);
+        if (shipment == null) {
+            throw new RuntimeException("Shipment not found with ID: " + id);
         }
 
         if (shipment.getStatus() == ShipmentStatus.RECEIVED) {
@@ -73,7 +99,25 @@ public class ShipmentService {
 
         shipment.setStatus(ShipmentStatus.RECEIVED);
         shipment.setDeliveryDate(LocalDateTime.now());
+
         repo.update(shipment);
+        System.out.println("✅ Shipment marked as received: " + id);
+    }
+
+    public void deleteShipment(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Shipment ID cannot be null");
+        }
+
+        System.out.println("🗑️ Deleting shipment with ID: " + id);
+
+        try {
+            repo.deleteById(id);
+            System.out.println("✅ Shipment deleted successfully!");
+        } catch (Exception e) {
+            System.err.println("❌ Failed to delete shipment: " + e.getMessage());
+            throw new RuntimeException("Грешка при изтриване на пратката: " + e.getMessage(), e);
+        }
     }
 
     public List<Shipment> getAllShipments() {

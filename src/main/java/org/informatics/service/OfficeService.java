@@ -8,17 +8,24 @@ import java.util.List;
 
 public class OfficeService {
     private final OfficeDao repo = new OfficeDao();
+
     public Office createOffice(String address, Company company) {
         if (address == null || address.trim().isEmpty()) {
-            throw new IllegalArgumentException("Office address cannot be empty");
+            throw new IllegalArgumentException("Адресът не може да бъде празен");
         }
         if (company == null) {
-            throw new IllegalArgumentException("Company cannot be null");
+            throw new IllegalArgumentException("Компанията не може да бъде null");
+        }
+
+        Office existing = repo.findByAddress(address.trim());
+        if (existing != null) {
+            throw new IllegalArgumentException("Офис с адрес '" + address + "' вече съществува!");
         }
 
         Office office = new Office();
         office.setAddress(address.trim());
         office.setCompany(company);
+
         return repo.save(office);
     }
 

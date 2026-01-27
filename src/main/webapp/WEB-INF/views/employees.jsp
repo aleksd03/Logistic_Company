@@ -67,6 +67,7 @@
                         <th>ID</th>
                         <th>ИМЕ</th>
                         <th>EMAIL</th>
+                        <th>ТИП</th>
                         <th>КОМПАНИЯ</th>
                         <th>ОФИС</th>
                         <th>ДАТА НА РЕГИСТРАЦИЯ</th>
@@ -84,19 +85,32 @@
                                     : "N/A" %>
                         </td>
                         <td><%= e.getUser() != null ? e.getUser().getEmail() : "N/A" %></td>
+                        <td>
+                            <% if (e.getEmployeeType() != null) { %>
+                            <% if (e.getEmployeeType().toString().equals("COURIER")) { %>
+                            <span class="badge badge-courier">🚚 Куриер</span>
+                            <% } else if (e.getEmployeeType().toString().equals("OFFICE_EMPLOYEE")) { %>
+                            <span class="badge badge-office">🏢 Офис служител</span>
+                            <% } else { %>
+                            <%= e.getEmployeeType() %>
+                            <% } %>
+                            <% } else { %>
+                            <span class="badge badge-unknown">❓ Неизвестен</span>
+                            <% } %>
+                        </td>
                         <td><%= e.getCompany() != null ? e.getCompany().getName() : "Без компания" %></td>
                         <td><%= e.getOffice() != null ? e.getOffice().getAddress() : "Без офис" %></td>
                         <td><%= e.getUser() != null ? e.getUser().getCreatedAt().toString().substring(0, 16).replace("T", " ") : "N/A" %></td>
                         <td>
                             <div class="action-buttons">
-                                <button onclick="openEditModal(<%= e.getId() %>, <%= e.getCompany() != null ? e.getCompany().getId() : "null" %>, <%= e.getOffice() != null ? e.getOffice().getId() : "null" %>)"
+                                <button onclick="openEditModal(<%= e.getId() %>, <%= e.getCompany() != null ? e.getCompany().getId() : "null" %>, <%= e.getOffice() != null ? e.getOffice().getId() : "null" %>, '<%= e.getEmployeeType() != null ? e.getEmployeeType() : "" %>')"
                                         class="btn btn-primary">
                                     🖊️ Редактирай
                                 </button>
 
                                 <form action="${pageContext.request.contextPath}/employees"
                                       method="get"
-                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете служителя <%= e.getUser() != null ? e.getUser().getFirstName() + " " + e.getUser().getLastName() : "" %>?\\n\\nВНИМАНИЕ: Това може да повлияе на пратките регистрирани от този служител!');">
+                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете служителя <%= e.getUser() != null ? e.getUser().getFirstName() + " " + e.getUser().getLastName() : "" %>?\n\nВНИМАНИЕ: Това може да повлияе на пратките регистрирани от този служител!');">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<%= e.getId() %>">
                                     <button type="submit" class="btn btn-danger">
@@ -109,7 +123,7 @@
                     <% } %>
                     <% } else { %>
                     <tr>
-                        <td colspan="7" class="text-center">Няма регистрирани служители.</td>
+                        <td colspan="8" class="text-center">Няма регистрирани служители.</td>
                     </tr>
                     <% } %>
                     </tbody>
@@ -128,11 +142,20 @@
     <div id="employeeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Редактирај служител</h2>
+                <h2>Редактирай служител</h2>
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
             <form action="${pageContext.request.contextPath}/employees" method="post">
                 <input type="hidden" name="id" id="employeeId">
+
+                <div class="form-group">
+                    <label for="employeeType">Тип служител *</label>
+                    <select id="employeeType" name="employeeType" required>
+                        <option value="">-- Изберете тип --</option>
+                        <option value="OFFICE_EMPLOYEE">🏢 Офис служител</option>
+                        <option value="COURIER">🚚 Куриер</option>
+                    </select>
+                </div>
 
                 <div class="form-group">
                     <label for="companyId">Компания</label>
@@ -169,10 +192,12 @@
     </div>
 
     <script>
-        function openEditModal(employeeId, companyId, officeId) {
+        function openEditModal(employeeId, companyId, officeId, employeeType) {
             document.getElementById('employeeId').value = employeeId;
             document.getElementById('companyId').value = companyId || '';
+            document.getElementById('employeeType').value = employeeType || '';
 
+            // Filter offices by company
             loadOffices();
 
             document.getElementById('officeId').value = officeId || '';
@@ -198,6 +223,7 @@
                 }
             }
 
+            // Reset selection if current office doesn't match company
             const selectedOption = officeSelect.options[officeSelect.selectedIndex];
             if (selectedOption && selectedOption.getAttribute('data-company') !== companyId && companyId !== '') {
                 officeSelect.value = '';
@@ -208,6 +234,7 @@
             document.getElementById('employeeModal').style.display = 'none';
         }
 
+        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('employeeModal');
             if (event.target == modal) {

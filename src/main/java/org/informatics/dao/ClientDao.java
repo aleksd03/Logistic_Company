@@ -15,10 +15,12 @@ public class ClientDao {
         try {
             session = SessionFactoryUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.persist(client);
+
+            Client merged = session.merge(client);
+
             tx.commit();
-            System.out.println("Client saved successfully with ID: " + client.getId());
-            return client;
+            System.out.println("Client saved successfully with ID: " + merged.getId());
+            return merged;
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
@@ -152,10 +154,7 @@ public class ClientDao {
         try {
             session = SessionFactoryUtil.getSessionFactory().openSession();
             return session.createQuery(
-                            "SELECT DISTINCT c FROM Client c " +
-                                    "LEFT JOIN FETCH c.user u " +
-                                    "LEFT JOIN FETCH c.company " +
-                                    "WHERE u.id = :userId",
+                            "SELECT c FROM Client c JOIN c.user u WHERE u.id = :userId",
                             Client.class)
                     .setParameter("userId", userId)
                     .uniqueResult();

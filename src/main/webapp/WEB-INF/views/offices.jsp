@@ -12,7 +12,7 @@
     List<Office> offices = (List<Office>) request.getAttribute("offices");
     List<Company> companies = (List<Company>) request.getAttribute("companies");
     String success = request.getParameter("success");
-    String error = (String) request.getAttribute("error");
+    String error = request.getParameter("error");
 %>
 <!DOCTYPE html>
 <html lang="bg">
