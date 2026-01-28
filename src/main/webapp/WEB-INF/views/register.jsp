@@ -2,16 +2,24 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
+    <!-- Page metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
+
+    <!-- Global stylesheet -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
 <div class="container">
+
+    <!-- ================= HEADER ================= -->
     <header>
         <div class="header-content">
+            <!-- Logo / Home link -->
             <a href="${pageContext.request.contextPath}/" class="logo">ALVAS Logistics</a>
+
+            <!-- Navigation menu -->
             <nav>
                 <ul>
                     <li><a href="${pageContext.request.contextPath}/">Начало</a></li>
@@ -22,17 +30,22 @@
         </div>
     </header>
 
+    <!-- ================= MAIN CONTENT ================= -->
     <main>
         <div class="auth-form-container">
             <h2>Регистрация</h2>
             <p>Създайте нов акаунт в системата</p>
 
+            <!-- Display server-side validation / error message -->
             <% String error = (String) request.getAttribute("error"); %>
             <% if (error != null) { %>
-            <div class="alert alert-error"><%= error %></div>
+                <div class="alert alert-error"><%= error %></div>
             <% } %>
 
+            <!-- ================= REGISTRATION FORM ================= -->
             <form method="post" action="${pageContext.request.contextPath}/register">
+
+                <!-- Basic user information -->
                 <label for="firstName">Име *</label>
                 <input type="text" id="firstName" name="firstName" required>
 
@@ -42,12 +55,14 @@
                 <label for="email">Имейл *</label>
                 <input type="email" id="email" name="email" required>
 
+                <!-- Password fields -->
                 <label for="password">Парола *</label>
                 <input type="password" id="password" name="password" required minlength="8">
 
                 <label for="confirmPassword">Потвърди парола *</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
 
+                <!-- Role selection -->
                 <label for="role">Роля *</label>
                 <select id="role" name="role" required>
                     <option value="">Избери роля</option>
@@ -55,7 +70,8 @@
                     <option value="EMPLOYEE">Служител</option>
                 </select>
 
-                <!-- EMPLOYEE TYPE (показва се само за EMPLOYEE) -->
+                <!-- ================= EMPLOYEE-ONLY FIELDS ================= -->
+                <!-- Visible only when role == EMPLOYEE -->
                 <div id="employeeTypeContainer" style="display: none;">
                     <label for="employeeType">Тип служител *</label>
                     <select id="employeeType" name="employeeType">
@@ -65,7 +81,8 @@
                     </select>
                 </div>
 
-                <!-- COMPANY CHECKBOX (показва се само за CLIENT) -->
+                <!-- ================= CLIENT-ONLY FIELDS ================= -->
+                <!-- Company registration checkbox (CLIENT only) -->
                 <div id="companyCheckboxContainer" class="checkbox-container" style="display: none;">
                     <label class="checkbox-label">
                         <input type="checkbox" id="isCompany" name="isCompany" value="true">
@@ -73,17 +90,22 @@
                     </label>
                 </div>
 
+                <!-- Company details (shown only if checkbox is checked) -->
                 <div id="companyFields" class="company-fields">
                     <label for="companyName">Име на фирмата</label>
-                    <input type="text" id="companyName" name="companyName"
+                    <input type="text"
+                           id="companyName"
+                           name="companyName"
                            placeholder="Въведете име на фирмата">
                     <small>
                         💡 Ако оставите празно, ще бъде създадена фирма с името: "Вашето име - Фирма"
                     </small>
                 </div>
 
+                <!-- Submit button -->
                 <button type="submit">Регистрирай се</button>
 
+                <!-- Login redirect -->
                 <div class="text-center">
                     <p>Вече имате акаунт?</p>
                     <a href="${pageContext.request.contextPath}/login" class="btn-outline">Влезте</a>
@@ -97,30 +119,31 @@
     </footer>
 </div>
 
+<!-- ================= CLIENT-SIDE LOGIC ================= -->
 <script>
-    // Password validation
+    // Validate passwords and employee type before submit
     document.querySelector('form').addEventListener('submit', function(e) {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
+        // Passwords must match
         if (password !== confirmPassword) {
             e.preventDefault();
             alert('Паролите не съвпадат!');
             return;
         }
 
-        // Validate employee type if EMPLOYEE role is selected
+        // Employee must have employee type selected
         const role = document.getElementById('role').value;
         const employeeType = document.getElementById('employeeType').value;
 
         if (role === 'EMPLOYEE' && !employeeType) {
             e.preventDefault();
             alert('Моля изберете тип служител!');
-            return;
         }
     });
 
-    // Show/hide fields based on role
+    // Toggle fields based on selected role
     document.getElementById('role').addEventListener('change', function() {
         const companyCheckboxContainer = document.getElementById('companyCheckboxContainer');
         const employeeTypeContainer = document.getElementById('employeeTypeContainer');
@@ -130,19 +153,16 @@
         const employeeTypeSelect = document.getElementById('employeeType');
 
         if (this.value === 'CLIENT') {
-            // Show company checkbox for CLIENT
             companyCheckboxContainer.style.display = 'block';
             employeeTypeContainer.style.display = 'none';
             employeeTypeSelect.value = '';
         } else if (this.value === 'EMPLOYEE') {
-            // Show employee type for EMPLOYEE
             employeeTypeContainer.style.display = 'block';
             companyCheckboxContainer.style.display = 'none';
             isCompanyCheckbox.checked = false;
             companyFields.classList.remove('visible');
             companyNameInput.value = '';
         } else {
-            // Hide both if no role selected
             companyCheckboxContainer.style.display = 'none';
             employeeTypeContainer.style.display = 'none';
             isCompanyCheckbox.checked = false;
@@ -152,7 +172,7 @@
         }
     });
 
-    // Show/hide company fields based on checkbox
+    // Toggle company fields based on checkbox
     document.getElementById('isCompany').addEventListener('change', function() {
         const companyFields = document.getElementById('companyFields');
         const companyNameInput = document.getElementById('companyName');
