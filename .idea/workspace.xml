@@ -9,21 +9,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c4038e2-7717-491e-8279-95abd1199387" name="Changes" comment="- filter shipments by status">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/MonthlyStatsServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/RevenueReportServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/monthly-stats.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/revenue-report.jsp" afterDir="false" />
+    <list default="true" id="1c4038e2-7717-491e-8279-95abd1199387" name="Changes" comment="feat: Complete all requirements - shipment filtering, reports, and statistics&#10;&#10;- Add employee shipment filtering with dropdown UI&#10;- Implement undelivered shipments view with transit days indicators&#10;- Add revenue report with date range filtering&#10;- Implement monthly statistics page with automated calculations&#10;- Update reports page with all functional links&#10;- Add registration date column to clients table&#10;- Update CSS with proper classes for reports module&#10;- Add Bulgarian month translation in monthly stats&#10;- Update ShipmentService with period filtering methods&#10;&#10;All core requirements (5d, 5e, 5h) completed and tested.&#10;Ready for production and unit testing.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DOCUMENTATION.md" beforeDir="false" afterPath="$PROJECT_DIR$/DOCUMENTATION.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DOCUMENTATION_BG.md" beforeDir="false" afterPath="$PROJECT_DIR$/DOCUMENTATION_BG.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/service/ShipmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/service/ShipmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ReportsServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/informatics/web/servlet/ReportsServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/clients.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/clients.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employee-shipments.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/employee-shipments.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/reports.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/reports.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/assets/css/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,32 +86,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build Project_Logistic_Company.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Tomcat Server.Tomcat 10.1.48.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/alexd/Desktop/University/3rd year/1st semester/Programming and Internet Technology Practice/Project_Logistic_Company&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build Project_Logistic_Company.executor": "Run",
+    "Gradle.Tests in 'Logistic_Company.test'.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Tomcat Server.Tomcat 10.1.48.executor": "Run",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/alexd/Desktop/University/3rd year/1st semester/Programming and Internet Technology Practice/Project_Logistic_Company",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -138,7 +126,32 @@
       </map>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Tomcat Server.Tomcat 10.1.48">
+    <configuration name="Tests in 'Logistic_Company.test'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
     <configuration name="Tomcat 10.1.48" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.48" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
@@ -226,6 +239,11 @@
         </option>
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.Tests in 'Logistic_Company.test'" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -263,7 +281,8 @@
       <workItem from="1769469380923" duration="7731000" />
       <workItem from="1769477289710" duration="163000" />
       <workItem from="1769515762250" duration="8080000" />
-      <workItem from="1769534023376" duration="3708000" />
+      <workItem from="1769534023376" duration="4074000" />
+      <workItem from="1769588823308" duration="1999000" />
     </task>
     <task id="LOCAL-00001" summary="Restructure">
       <option name="closed" value="true" />
@@ -369,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769523926668</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="feat: Complete all requirements - shipment filtering, reports, and statistics&#10;&#10;- Add employee shipment filtering with dropdown UI&#10;- Implement undelivered shipments view with transit days indicators&#10;- Add revenue report with date range filtering&#10;- Implement monthly statistics page with automated calculations&#10;- Update reports page with all functional links&#10;- Add registration date column to clients table&#10;- Update CSS with proper classes for reports module&#10;- Add Bulgarian month translation in monthly stats&#10;- Update ShipmentService with period filtering methods&#10;&#10;All core requirements (5d, 5e, 5h) completed and tested.&#10;Ready for production and unit testing.">
+      <option name="closed" value="true" />
+      <created>1769537967661</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1769537967661</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -399,7 +426,8 @@
     <MESSAGE value="feat: Complete CRUD operations for all entities (Edit, Delete, Mark as Received)&#10;&#10;- Implemented Edit &amp; Delete for Clients with company assignment&#10;- Implemented Edit &amp; Delete for Employees with employee type, company, and office&#10;- Implemented Edit &amp; Delete for Offices with duplicate address validation&#10;- Implemented Edit, Delete, and Mark as Received for Shipments&#10;- Fixed detached entity issues by using merge() instead of persist()&#10;- Added Employee Type badges and filtering in UI&#10;- Updated all DAOs with proper transaction handling&#10;- Added error alerts for offices with duplicate addresses&#10;- Improved modal forms with proper field validation&#10;&#10;All entities now have full CRUD functionality with cascading deletes&#10;and proper foreign key constraints (ON DELETE SET NULL where appropriate)." />
     <MESSAGE value="- filter shipments by employee" />
     <MESSAGE value="- filter shipments by status" />
-    <option name="LAST_COMMIT_MESSAGE" value="- filter shipments by status" />
+    <MESSAGE value="feat: Complete all requirements - shipment filtering, reports, and statistics&#10;&#10;- Add employee shipment filtering with dropdown UI&#10;- Implement undelivered shipments view with transit days indicators&#10;- Add revenue report with date range filtering&#10;- Implement monthly statistics page with automated calculations&#10;- Update reports page with all functional links&#10;- Add registration date column to clients table&#10;- Update CSS with proper classes for reports module&#10;- Add Bulgarian month translation in monthly stats&#10;- Update ShipmentService with period filtering methods&#10;&#10;All core requirements (5d, 5e, 5h) completed and tested.&#10;Ready for production and unit testing." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Complete all requirements - shipment filtering, reports, and statistics&#10;&#10;- Add employee shipment filtering with dropdown UI&#10;- Implement undelivered shipments view with transit days indicators&#10;- Add revenue report with date range filtering&#10;- Implement monthly statistics page with automated calculations&#10;- Update reports page with all functional links&#10;- Add registration date column to clients table&#10;- Update CSS with proper classes for reports module&#10;- Add Bulgarian month translation in monthly stats&#10;- Update ShipmentService with period filtering methods&#10;&#10;All core requirements (5d, 5e, 5h) completed and tested.&#10;Ready for production and unit testing." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Logistic_Company$Tomcat_10_1_48.ic" NAME="Tomcat 10.1.48 Coverage Results" MODIFIED="1767558405003" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />

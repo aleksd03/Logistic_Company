@@ -128,19 +128,19 @@
                                         🖊️ Редактирай
                                     </button>
 
-                                    <%-- Delete company (GET with confirmation) --%>
-                                    <form action="${pageContext.request.contextPath}/companies"
-                                          method="get"
-                                          onsubmit="return confirm(
-                                              'Сигурни ли сте, че искате да изтриете ' +
-                                              '<%= c.getName().replace(\"'\", \"\\\\'\") %>?'
-                                          );">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="id" value="<%= c.getId() %>">
-                                        <button type="submit" class="btn btn-danger">
-                                            🗑️ Изтрий
-                                        </button>
-                                    </form>
+                                        <%-- Delete company (GET with confirmation) --%>
+                                        <%
+                                            String companyName = c.getName().replace("'", "\\'");
+                                        %>
+                                        <form action="${pageContext.request.contextPath}/companies"
+                                              method="get"
+                                              onsubmit="return confirm('Сигурни ли сте, че искате да изтриете <%= companyName %>?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id" value="<%= c.getId() %>">
+                                            <button type="submit" class="btn btn-danger">
+                                                🗑️ Изтрий
+                                            </button>
+                                        </form>
                                 </div>
                             </td>
                         </tr>
