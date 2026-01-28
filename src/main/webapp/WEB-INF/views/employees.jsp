@@ -4,6 +4,8 @@
 <%@ page import="org.informatics.entity.Company" %>
 <%@ page import="org.informatics.entity.Office" %>
 <%@ page import="org.informatics.entity.enums.Role" %>
+
+<%-- Read session and request-scoped data --%>
 <%
     String userEmail = (String) session.getAttribute("userEmail");
     String firstName = (String) session.getAttribute("firstName");
@@ -16,6 +18,7 @@
     String success = request.getParameter("success");
     String error = (String) request.getAttribute("error");
 %>
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -24,8 +27,11 @@
     <title>Служители - ALVAS Logistics</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
+
 <body>
 <div class="container">
+
+    <%-- HEADER / NAVIGATION --%>
     <header>
         <div class="header-content">
             <a href="${pageContext.request.contextPath}/" class="logo">ALVAS Logistics</a>
@@ -46,21 +52,27 @@
     </header>
 
     <main>
+
+        <%-- PAGE TITLE --%>
         <div class="page-header">
             <h1>👔 Управление на служители</h1>
             <p>Преглед на всички служители в системата</p>
         </div>
 
+        <%-- SUCCESS MESSAGE --%>
         <% if (success != null) { %>
         <div class="alert alert-success"><%= success %></div>
         <% } %>
 
+        <%-- ERROR MESSAGE --%>
         <% if (error != null) { %>
         <div class="alert alert-error"><%= error %></div>
         <% } %>
 
         <div class="card">
             <div class="table-container">
+
+                <%-- EMPLOYEES TABLE --%>
                 <table>
                     <thead>
                     <tr>
@@ -74,40 +86,66 @@
                         <th>ДЕЙСТВИЯ</th>
                     </tr>
                     </thead>
+
                     <tbody>
+                    <%-- Render employees if available --%>
                     <% if (employees != null && !employees.isEmpty()) { %>
                     <% for (Employee e : employees) { %>
                     <tr>
                         <td><%= e.getId() %></td>
+
+                        <%-- Employee full name --%>
                         <td>
                             <%= e.getUser() != null
                                     ? e.getUser().getFirstName() + " " + e.getUser().getLastName()
                                     : "N/A" %>
                         </td>
+
+                        <%-- Employee email --%>
                         <td><%= e.getUser() != null ? e.getUser().getEmail() : "N/A" %></td>
+
+                        <%-- Employee type with visual badge --%>
                         <td>
                             <% if (e.getEmployeeType() != null) { %>
-                            <% if (e.getEmployeeType().toString().equals("COURIER")) { %>
-                            <span class="badge badge-courier">🚚 Куриер</span>
-                            <% } else if (e.getEmployeeType().toString().equals("OFFICE_EMPLOYEE")) { %>
-                            <span class="badge badge-office">🏢 Офис служител</span>
+                                <% if (e.getEmployeeType().toString().equals("COURIER")) { %>
+                                    <span class="badge badge-courier">🚚 Куриер</span>
+                                <% } else if (e.getEmployeeType().toString().equals("OFFICE_EMPLOYEE")) { %>
+                                    <span class="badge badge-office">🏢 Офис служител</span>
+                                <% } else { %>
+                                    <%= e.getEmployeeType() %>
+                                <% } %>
                             <% } else { %>
-                            <%= e.getEmployeeType() %>
-                            <% } %>
-                            <% } else { %>
-                            <span class="badge badge-unknown">❓ Неизвестен</span>
+                                <span class="badge badge-unknown">❓ Неизвестен</span>
                             <% } %>
                         </td>
+
+                        <%-- Company assignment --%>
                         <td><%= e.getCompany() != null ? e.getCompany().getName() : "Без компания" %></td>
+
+                        <%-- Office assignment --%>
                         <td><%= e.getOffice() != null ? e.getOffice().getAddress() : "Без офис" %></td>
-                        <td><%= e.getUser() != null ? e.getUser().getCreatedAt().toString().substring(0, 16).replace("T", " ") : "N/A" %></td>
+
+                        <%-- Registration date --%>
+                        <td>
+                            <%= e.getUser() != null
+                                    ? e.getUser().getCreatedAt().toString().substring(0, 16).replace("T", " ")
+                                    : "N/A" %>
+                        </td>
+
+                        <%-- ACTION BUTTONS --%>
                         <td>
                             <div class="action-buttons">
-                                <button onclick="openEditModal(<%= e.getId() %>, <%= e.getCompany() != null ? e.getCompany().getId() : "null" %>, <%= e.getOffice() != null ? e.getOffice().getId() : "null" %>, '<%= e.getEmployeeType() != null ? e.getEmployeeType() : "" %>')"
+
+                                <%-- Open edit modal with employee data --%>
+                                <button onclick="openEditModal(<%= e.getId() %>,
+                                                              <%= e.getCompany() != null ? e.getCompany().getId() : "null" %>,
+                                                              <%= e.getOffice() != null ? e.getOffice().getId() : "null" %>,
+                                                              '<%= e.getEmployeeType() != null ? e.getEmployeeType() : "" %>')"
                                         class="btn btn-primary">
                                     🖊️ Редактирай
                                 </button>
 
+                                <%-- Delete employee --%>
                                 <form action="${pageContext.request.contextPath}/employees"
                                       method="get"
                                       onsubmit="return confirm('Сигурни ли сте, че искате да изтриете служителя <%= e.getUser() != null ? e.getUser().getFirstName() + " " + e.getUser().getLastName() : "" %>?\n\nВНИМАНИЕ: Това може да повлияе на пратките регистрирани от този служител!');">
@@ -122,6 +160,8 @@
                     </tr>
                     <% } %>
                     <% } else { %>
+
+                    <%-- No employees case --%>
                     <tr>
                         <td colspan="8" class="text-center">Няма регистрирани служители.</td>
                     </tr>
@@ -134,17 +174,20 @@
         <a href="${pageContext.request.contextPath}/" class="btn btn-outline">← Обратно към началото</a>
     </main>
 
+    <%-- FOOTER --%>
     <footer>
         <p>&copy; 2025 ALVAS Logistics. Всички права запазени.</p>
     </footer>
 
-    <!-- EDIT MODAL -->
+    <%-- EDIT EMPLOYEE MODAL --%>
     <div id="employeeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Редактирай служител</h2>
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
+
+            <%-- Employee edit form --%>
             <form action="${pageContext.request.contextPath}/employees" method="post">
                 <input type="hidden" name="id" id="employeeId">
 
@@ -157,6 +200,7 @@
                     </select>
                 </div>
 
+                <%-- Company selection (drives office filtering) --%>
                 <div class="form-group">
                     <label for="companyId">Компания</label>
                     <select id="companyId" name="companyId" onchange="loadOffices()">
@@ -169,13 +213,15 @@
                     </select>
                 </div>
 
+                <%-- Office selection filtered by selected company --%>
                 <div class="form-group">
                     <label for="officeId">Офис</label>
                     <select id="officeId" name="officeId">
                         <option value="">Без офис</option>
                         <% if (offices != null) {
                             for (Office off : offices) { %>
-                        <option value="<%= off.getId() %>" data-company="<%= off.getCompany() != null ? off.getCompany().getId() : "" %>">
+                        <option value="<%= off.getId() %>"
+                                data-company="<%= off.getCompany() != null ? off.getCompany().getId() : "" %>">
                             <%= off.getAddress() %>
                         </option>
                         <%  }
@@ -192,18 +238,20 @@
     </div>
 
     <script>
+        // Open modal and preload employee data
         function openEditModal(employeeId, companyId, officeId, employeeType) {
             document.getElementById('employeeId').value = employeeId;
             document.getElementById('companyId').value = companyId || '';
             document.getElementById('employeeType').value = employeeType || '';
 
-            // Filter offices by company
+            // Apply company-based office filtering
             loadOffices();
 
             document.getElementById('officeId').value = officeId || '';
             document.getElementById('employeeModal').style.display = 'flex';
         }
 
+        // Show only offices belonging to the selected company
         function loadOffices() {
             const companyId = document.getElementById('companyId').value;
             const officeSelect = document.getElementById('officeId');
@@ -215,26 +263,25 @@
                     option.style.display = 'block';
                 } else {
                     const optionCompany = option.getAttribute('data-company');
-                    if (!companyId || optionCompany === companyId) {
-                        option.style.display = 'block';
-                    } else {
-                        option.style.display = 'none';
-                    }
+                    option.style.display = (!companyId || optionCompany === companyId) ? 'block' : 'none';
                 }
             }
 
-            // Reset selection if current office doesn't match company
+            // Reset office if it doesn't match selected company
             const selectedOption = officeSelect.options[officeSelect.selectedIndex];
-            if (selectedOption && selectedOption.getAttribute('data-company') !== companyId && companyId !== '') {
+            if (selectedOption &&
+                selectedOption.getAttribute('data-company') !== companyId &&
+                companyId !== '') {
                 officeSelect.value = '';
             }
         }
 
+        // Close modal
         function closeModal() {
             document.getElementById('employeeModal').style.display = 'none';
         }
 
-        // Close modal when clicking outside
+        // Close modal when clicking outside it
         window.onclick = function(event) {
             const modal = document.getElementById('employeeModal');
             if (event.target == modal) {
@@ -242,6 +289,7 @@
             }
         }
     </script>
+
 </div>
 </body>
 </html>
