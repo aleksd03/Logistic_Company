@@ -19,25 +19,42 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * Servlet responsible for managing employees.
+ * Allows EMPLOYEE users to view, update, and delete employees.
+ */
 @WebServlet("/employees")
 public class EmployeesServlet extends HttpServlet {
+
+    // Services used for employee, company, and office operations
     private final EmployeeService employeeService = new EmployeeService();
     private final CompanyService companyService = new CompanyService();
     private final OfficeService officeService = new OfficeService();
 
+    /**
+     * Handles GET requests:
+     * - Displays the employees list
+     * - Processes employee deletion when action=delete
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Retrieve existing session (do not create a new one)
         HttpSession session = request.getSession(false);
 
+        // Allow access only to EMPLOYEE users
         if (session == null || session.getAttribute("userRole") != Role.EMPLOYEE) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
+        // Check for optional action parameter
         String action = request.getParameter("action");
 
+        // =======================
+        // DELETE EMPLOYEE ACTION
+        // =======================
         if ("delete".equals(action)) {
             try {
                 Long id = Long.parseLong(request.getParameter("id"));
@@ -45,64 +62,105 @@ public class EmployeesServlet extends HttpServlet {
 
                 employeeService.deleteEmployee(id);
 
-                String successMsg = java.net.URLEncoder.encode("Служителят е изтрит успешно!", StandardCharsets.UTF_8);
-                response.sendRedirect(request.getContextPath() + "/employees?success=" + successMsg);
+                // Redirect with success message
+                String successMsg = java.net.URLEncoder.encode(
+                        "Служителят е изтрит успешно!",
+                        StandardCharsets.UTF_8
+                );
+                response.sendRedirect(
+                        request.getContextPath() + "/employees?success=" + successMsg
+                );
                 return;
+
             } catch (Exception e) {
+                // Handle deletion errors
                 e.printStackTrace();
                 System.err.println("❌ Error deleting employee: " + e.getMessage());
-                String errorMsg = java.net.URLEncoder.encode("Грешка при изтриване: " + e.getMessage(), StandardCharsets.UTF_8);
-                response.sendRedirect(request.getContextPath() + "/employees?error=" + errorMsg);
+
+                String errorMsg = java.net.URLEncoder.encode(
+                        "Грешка при изтриване: " + e.getMessage(),
+                        StandardCharsets.UTF_8
+                );
+                response.sendRedirect(
+                        request.getContextPath() + "/employees?error=" + errorMsg
+                );
                 return;
             }
         }
 
+        // =======================
+        // LIST ALL EMPLOYEES
+        // =======================
         try {
             List<Employee> employees = employeeService.getAllEmployees();
             List<Company> companies = companyService.getAllCompanies();
             List<Office> offices = officeService.getAllOffices();
 
+            // Pass data to the JSP view
             request.setAttribute("employees", employees);
             request.setAttribute("companies", companies);
             request.setAttribute("offices", offices);
 
-            request.getRequestDispatcher("/WEB-INF/views/employees.jsp").forward(request, response);
+            // Forward to employees view
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/employees.jsp"
+            ).forward(request, response);
+
         } catch (Exception e) {
+            // Handle loading errors
             e.printStackTrace();
-            request.setAttribute("error", "Грешка при зареждане на служители: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+            request.setAttribute(
+                    "error",
+                    "Грешка при зареждане на служители: " + e.getMessage()
+            );
+            request.getRequestDispatcher(
+                    "/WEB-INF/views/error.jsp"
+            ).forward(request, response);
         }
     }
 
+    /**
+     * Handles POST requests:
+     * - Updates employee details (type, company, office)
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Retrieve existing session (do not create a new one)
         HttpSession session = request.getSession(false);
 
+        // Allow access only to EMPLOYEE users
         if (session == null || session.getAttribute("userRole") != Role.EMPLOYEE) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 
         try {
+            // Extract request parameters
             String idParam = request.getParameter("id");
             String companyIdParam = request.getParameter("companyId");
             String officeIdParam = request.getParameter("officeId");
             String employeeTypeParam = request.getParameter("employeeType");
 
+            // =======================
+            // UPDATE EMPLOYEE
+            // =======================
             if (idParam != null && !idParam.isEmpty()) {
-                // UPDATE EMPLOYEE
+
                 Long employeeId = Long.parseLong(idParam);
                 Employee employee = employeeService.getEmployeeById(employeeId);
 
                 if (employee != null) {
+
+                    // Update employee type
                     if (employeeTypeParam != null && !employeeTypeParam.isEmpty()) {
-                        EmployeeType employeeType = EmployeeType.valueOf(employeeTypeParam);
+                        EmployeeType employeeType =
+                                EmployeeType.valueOf(employeeTypeParam);
                         employee.setEmployeeType(employeeType);
                     }
 
-                    // Update company
+                    // Update company association
                     if (companyIdParam != null && !companyIdParam.isEmpty()) {
                         Long companyId = Long.parseLong(companyIdParam);
                         Company company = companyService.getCompanyById(companyId);
@@ -111,7 +169,7 @@ public class EmployeesServlet extends HttpServlet {
                         employee.setCompany(null);
                     }
 
-                    // Update office
+                    // Update office association
                     if (officeIdParam != null && !officeIdParam.isEmpty()) {
                         Long officeId = Long.parseLong(officeIdParam);
                         Office office = officeService.getOfficeById(officeId);
@@ -120,18 +178,31 @@ public class EmployeesServlet extends HttpServlet {
                         employee.setOffice(null);
                     }
 
+                    // Persist employee changes
                     employeeService.updateEmployee(employee);
                     System.out.println("✅ Employee updated: " + employeeId);
                 }
             }
 
-            String successMsg = java.net.URLEncoder.encode("Служителят е актуализиран успешно!", "UTF-8");
-            response.sendRedirect(request.getContextPath() + "/employees?success=" + successMsg);
+            // Redirect with success message
+            String successMsg = java.net.URLEncoder.encode(
+                    "Служителят е актуализиран успешно!",
+                    "UTF-8"
+            );
+            response.sendRedirect(
+                    request.getContextPath() + "/employees?success=" + successMsg
+            );
 
         } catch (Exception e) {
+            // Handle update errors
             e.printStackTrace();
-            String errorMsg = java.net.URLEncoder.encode("Грешка: " + e.getMessage(), "UTF-8");
-            response.sendRedirect(request.getContextPath() + "/employees?error=" + errorMsg);
+            String errorMsg = java.net.URLEncoder.encode(
+                    "Грешка: " + e.getMessage(),
+                    "UTF-8"
+            );
+            response.sendRedirect(
+                    request.getContextPath() + "/employees?error=" + errorMsg
+            );
         }
     }
 }
