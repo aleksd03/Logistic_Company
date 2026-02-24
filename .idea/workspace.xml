@@ -130,7 +130,7 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.Tests in 'Logistic_Company.test'">
+  <component name="RunManager" selected="Tomcat Server.Tomcat 10.1.48">
     <configuration name="PricingServiceTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -184,6 +184,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Tomcat 10.1.48" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.48" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/AlvasLogistics/" />
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
         <artifact name="Gradle : org.informatics : Project_Logistic_Company.war (exploded)">
@@ -270,6 +271,11 @@
         </option>
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Gradle.PricingServiceTest" />
+      <item itemvalue="Gradle.Tests in 'Logistic_Company.test'" />
+      <item itemvalue="Tomcat Server.Tomcat 10.1.48" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.PricingServiceTest" />
